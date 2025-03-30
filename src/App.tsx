@@ -101,7 +101,8 @@ function App() {
     points,
     playerLevel,
     getAvailableBuildings,
-    tick
+    tick,
+    clickPower
   } = useGameStore()
 
   const availableBuildings = getAvailableBuildings()
@@ -114,61 +115,80 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Box minH="100vh" bg="gray.900" color="white" py={8}>
-        <Container maxW="container.xl">
-          <VStack spacing={8}>
-            <Box textAlign="center">
-              <Heading as="h1" size="2xl" mb={4}>Clicker Clicker 2</Heading>
-              <Text fontSize="xl" color="yellow.400" mb={4}>Level {playerLevel}</Text>
-              <ResourceDisplay />
-            </Box>
-
-            <Mouse />
-            
-            <VStack spacing={8} w="full">
-              {/* Shop Section */}
-              <Box bg="gray.800" p={6} borderRadius="lg" w="full">
-                <Heading as="h2" size="xl" mb={6} color="blue.400">Shop</Heading>
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
-                  {availableBuildings.map((building) => (
-                    <BuildingButton
-                      key={building.id}
-                      title={building.title}
-                      cost={building.cost}
-                      owned={useGameStore.getState()[building.id as BuildingId]}
-                      level={useGameStore.getState()[`${building.id}Level` as BuildingLevelKey] as number}
-                      onClick={() => useGameStore.getState().buyBuilding(building.id as BuildingId)}
-                      description={building.description}
-                      production={building.production}
-                      buildingType={building.id}
-                      levelRequirement={building.levelRequirement}
-                    />
-                  ))}
-                  <NextBuildingPreview />
-                </SimpleGrid>
+      <Box minH="100vh" bg="gray.900" color="white">
+        <ResourceDisplay />
+        <Box pt="180px">
+          <Container maxW="container.xl">
+            <VStack spacing={8}>
+              <Box textAlign="center">
+                <Heading as="h1" size="2xl" mb={4}>Clicker Clicker 2</Heading>
+                <Text fontSize="xl" color="yellow.400" mb={4}>Level {playerLevel}</Text>
               </Box>
 
-              <Box h="1px" bg="gray.600" w="full" />
+              <Mouse />
+              
+              <VStack spacing={8} w="full">
+                {/* Shop Section */}
+                <Box bg="gray.800" p={6} borderRadius="lg" w="full">
+                  <Heading as="h2" size="xl" mb={6} color="blue.400">Shop</Heading>
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
+                    {availableBuildings.map((building) => (
+                      <BuildingButton
+                        key={building.id}
+                        title={building.title}
+                        cost={building.cost}
+                        owned={useGameStore.getState()[building.id as BuildingId]}
+                        level={useGameStore.getState()[`${building.id}Level` as BuildingLevelKey] as number}
+                        onClick={() => useGameStore.getState().buyBuilding(building.id as BuildingId)}
+                        description={building.description}
+                        production={building.production}
+                        buildingType={building.id}
+                        levelRequirement={building.levelRequirement}
+                      />
+                    ))}
+                    <NextBuildingPreview />
+                  </SimpleGrid>
+                </Box>
 
-              {/* Upgrades Section */}
-              <Box bg="gray.800" p={6} borderRadius="lg" w="full">
-                <Heading as="h2" size="xl" mb={6} color="green.400">Upgrades</Heading>
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
-                  <Button 
-                    onClick={() => useGameStore.getState().buyUpgrade('clickPower')}
-                    isDisabled={points < 20}
-                    bg="gray.700"
-                    _hover={{ bg: 'gray.600' }}
-                  >
-                    Upgrade Click Power (20 points)
-                  </Button>
-                </SimpleGrid>
-              </Box>
+                <Box h="1px" bg="gray.600" w="full" />
+
+                {/* Upgrades Section */}
+                <Box bg="gray.800" p={6} borderRadius="lg" w="full">
+                  <Heading as="h2" size="xl" mb={6} color="green.400">Upgrades</Heading>
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
+                    <Box
+                      bg="gray.700"
+                      p={4}
+                      borderRadius="lg"
+                      border="1px"
+                      borderColor="gray.600"
+                    >
+                      <VStack align="stretch" spacing={2}>
+                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                          <Text fontWeight="bold">Click Power</Text>
+                          <Text>Level {clickPower}</Text>
+                        </Box>
+                        <Text fontSize="sm" color="gray.400">
+                          Each click generates {clickPower} points
+                        </Text>
+                        <Button 
+                          onClick={() => useGameStore.getState().buyUpgrade('clickPower')}
+                          isDisabled={points < 20}
+                          bg="gray.600"
+                          _hover={{ bg: 'gray.500' }}
+                        >
+                          Upgrade (20 points)
+                        </Button>
+                      </VStack>
+                    </Box>
+                  </SimpleGrid>
+                </Box>
+              </VStack>
+
+              <MultiplierShop />
             </VStack>
-
-            <MultiplierShop />
-          </VStack>
-        </Container>
+          </Container>
+        </Box>
       </Box>
     </ChakraProvider>
   )

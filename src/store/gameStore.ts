@@ -72,6 +72,8 @@ interface GameState {
   tick: () => void
   upgradeBuilding: (buildingType: BuildingType) => void
   getClickPowerUpgradeCost: () => number
+  canUpgradeBuilding: (buildingType: BuildingType) => boolean
+  getBuildingUpgradeCost: (buildingType: BuildingType) => number
 
   // New getter for available buildings
   getAvailableBuildings: () => BuildingInfo[]
@@ -315,7 +317,14 @@ const calculateUpgradeCost = (buildingType: BuildingType, currentLevel: number):
   const tier = getBuildingTier(buildingType)
   const multiplier = getTierMultiplier(tier)
   
-  return Math.floor(baseCost * Math.pow(multiplier, currentLevel - 1))
+  // Formula: baseCost * multiplier^(currentLevel - 1)
+  // This ensures costs scale exponentially with level
+  const cost = Math.floor(baseCost * Math.pow(multiplier, currentLevel - 1))
+  
+  // For debugging
+  console.log(`Upgrade cost for ${buildingType} at level ${currentLevel}: ${cost} points, tier: ${tier}, multiplier: ${multiplier}`)
+  
+  return cost
 }
 
 // Calculate building production based on level, count, and tier
@@ -422,10 +431,41 @@ export const useGameStore = create<GameState>()(
         return calculateClickPowerUpgradeCost(clickPowerUpgrades)
       },
 
+      getBuildingUpgradeCost: (buildingType: BuildingType) => {
+        const state = get()
+        const currentLevel = state[`${buildingType}Level` as keyof GameState] as number
+        return calculateUpgradeCost(buildingType, currentLevel)
+      },
+
+      canUpgradeBuilding: (buildingType: BuildingType) => {
+        const state = get()
+        // Check if player owns at least one building
+        if (state[buildingType] <= 0) {
+          return false
+        }
+        
+        // Get current level and calculate upgrade cost
+        const currentLevel = state[`${buildingType}Level` as keyof GameState] as number
+        const cost = calculateUpgradeCost(buildingType, currentLevel)
+        
+        // Check if player has enough points
+        return state.points >= cost
+      },
+
       upgradeBuilding: (buildingType: BuildingType) => {
         const state = get()
         const currentLevel = state[`${buildingType}Level` as keyof GameState] as number
         const cost = calculateUpgradeCost(buildingType, currentLevel)
+        const ownedCount = state[buildingType]
+        
+        console.log(`Attempting to upgrade ${buildingType}: 
+          - Current level: ${currentLevel}
+          - Upgrade cost: ${cost}
+          - Player points: ${state.points}
+          - Buildings owned: ${ownedCount}
+          - Can afford: ${state.points >= cost}
+          - Owns building: ${ownedCount > 0}
+        `)
         
         if (state.points >= cost && state[buildingType] > 0) {
           // Play upgrade sound instead of purchase sound
@@ -440,12 +480,17 @@ export const useGameStore = create<GameState>()(
             const newProduction = calculateProduction(buildingType, newLevel, count)
             const productionDifference = newProduction - oldProduction
             
+            console.log(`Upgrade successful! New level: ${newLevel}, Production increase: +${productionDifference}/s`)
+            
             return {
               points: state.points - cost,
               [`${buildingType}Level`]: newLevel,
               pointsPerSecond: state.pointsPerSecond + productionDifference,
             }
           })
+        } else {
+          // Log why upgrade failed
+          console.warn(`Upgrade failed! ${state.points < cost ? 'Not enough points' : 'No buildings owned'}`)
         }
       },
       

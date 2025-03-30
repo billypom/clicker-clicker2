@@ -71,19 +71,35 @@ export function BuildingButton({
   buildingType,
   levelRequirement
 }: BuildingButtonProps) {
-  const { points, playerLevel, upgradeBuilding } = useGameStore()
+  const { 
+    points, 
+    playerLevel, 
+    upgradeBuilding, 
+    canUpgradeBuilding,
+    getBuildingUpgradeCost
+  } = useGameStore()
+  
   const canAfford = points >= cost
   const meetsLevelRequirement = playerLevel >= levelRequirement
   const isDisabledStyle = !canAfford || !meetsLevelRequirement
 
-  // Calculate upgrade cost
-  const calculateUpgradeCost = (currentLevel: number): number => {
-    return Math.floor(cost * Math.pow(1.5, currentLevel - 1))
-  }
+  // Get upgrade cost from the store's actual calculation
+  // This ensures the displayed cost matches the actual cost used in the upgrade function
+  const upgradeCost = getBuildingUpgradeCost(buildingType as keyof typeof buildingImages)
   
-  const upgradeCost = calculateUpgradeCost(level)
-  const canUpgrade = points >= upgradeCost && owned > 0
+  // Use the game store's method to determine if upgrade is possible
+  const canUpgrade = canUpgradeBuilding(buildingType as keyof typeof buildingImages)
   const pointsPerSecond = production.points || 0
+
+  // Create a helpful tooltip message
+  const getUpgradeTooltip = () => {
+    if (owned === 0) {
+      return "You need to own this building first";
+    } else if (points < upgradeCost) {
+      return `Not enough points (${points}/${upgradeCost})`;
+    }
+    return `Upgrade to level ${level + 1}`;
+  };
 
   return (
     <Box
@@ -171,9 +187,9 @@ export function BuildingButton({
           >
             Buy ({cost} points)
           </Button>
-          <Tooltip label={owned === 0 ? "You need to own this building first" : ""}>
+          <Tooltip label={getUpgradeTooltip()}>
             <Button 
-              onClick={() => upgradeBuilding(buildingType as any)}
+              onClick={() => upgradeBuilding(buildingType as keyof typeof buildingImages)}
               opacity={!canUpgrade ? 0.4 : 1}
               _hover={{ bg: 'green.600', opacity: !canUpgrade ? 0.4 : 1 }}
               cursor={!canUpgrade ? 'not-allowed' : 'pointer'}

@@ -76,6 +76,9 @@ interface GameState {
   getAvailableBuildings: () => BuildingInfo[]
 }
 
+// Define tiers based on level requirements for buildings
+type BuildingTier = 'early' | 'mid' | 'late';
+
 // Building information with costs and requirements
 export const BUILDING_INFO: Record<string, Omit<BuildingInfo, 'id'>> = {
   mouseFarms: {
@@ -274,10 +277,56 @@ const BUILDING_LEVEL_REQUIREMENTS = {
   dataGods: 90,
 }
 
-// Calculate upgrade cost based on current level
+// Helper function to determine building tier based on level requirement
+const getBuildingTier = (buildingType: BuildingType): BuildingTier => {
+  const levelRequirement = BUILDING_LEVEL_REQUIREMENTS[buildingType];
+  
+  if (levelRequirement <= 5) {
+    return 'early';
+  } else if (levelRequirement <= 50) {
+    return 'mid';
+  } else {
+    return 'late';
+  }
+}
+
+// Get tier-based upgrade cost multiplier
+const getTierMultiplier = (tier: BuildingTier): number => {
+  switch (tier) {
+    case 'early': return 1.75; // Steeper curve for early buildings
+    case 'mid': return 1.6;    // Medium curve for mid-game
+    case 'late': return 1.5;   // Unchanged for late game
+  }
+}
+
+// Get tier-based production scaling power
+const getTierScalingPower = (tier: BuildingTier): number => {
+  switch (tier) {
+    case 'early': return 0.9;  // Sub-linear scaling for early buildings
+    case 'mid': return 0.95;   // Slightly sub-linear for mid-game
+    case 'late': return 1;     // Linear scaling for late game
+  }
+}
+
+// Calculate upgrade cost based on current level and building tier
 const calculateUpgradeCost = (buildingType: BuildingType, currentLevel: number): number => {
   const baseCost = BUILDING_COSTS[buildingType]
-  return Math.floor(baseCost * Math.pow(1.5, currentLevel - 1))
+  const tier = getBuildingTier(buildingType)
+  const multiplier = getTierMultiplier(tier)
+  
+  return Math.floor(baseCost * Math.pow(multiplier, currentLevel - 1))
+}
+
+// Calculate building production based on level, count, and tier
+const calculateProduction = (buildingType: BuildingType, level: number, count: number): number => {
+  const baseRate = PRODUCTION_RATES[buildingType].points || 0
+  const tier = getBuildingTier(buildingType)
+  const scalingPower = getTierScalingPower(tier)
+  
+  // Apply tier-based scaling to level
+  const effectiveLevel = Math.pow(level, scalingPower)
+  
+  return baseRate * effectiveLevel * count
 }
 
 // Helper function to calculate click power upgrade cost
@@ -318,13 +367,17 @@ export const useGameStore = create<GameState>()(
         if (state.points >= cost) {
           set((state) => {
             const newCount = state[buildingType] + 1
-            const rates = PRODUCTION_RATES[buildingType]
             const level = state[`${buildingType}Level` as keyof GameState] as number
+            
+            // Use the new calculateProduction function
+            const newProduction = calculateProduction(buildingType, level, newCount)
+            const oldProduction = calculateProduction(buildingType, level, newCount - 1)
+            const productionDifference = newProduction - oldProduction
             
             return {
               points: state.points - cost,
               [buildingType]: newCount,
-              pointsPerSecond: state.pointsPerSecond + rates.points * level,
+              pointsPerSecond: state.pointsPerSecond + productionDifference,
             }
           })
         }
@@ -360,12 +413,11 @@ export const useGameStore = create<GameState>()(
         if (state.points >= cost && state[buildingType] > 0) {
           set((state) => {
             const newLevel = (state[`${buildingType}Level` as keyof GameState] as number) + 1
-            const rates = PRODUCTION_RATES[buildingType]
             const count = state[buildingType]
             
-            // Calculate the new points per second
-            const oldProduction = rates.points * (newLevel - 1) * count
-            const newProduction = rates.points * newLevel * count
+            // Use the new calculateProduction function for both old and new production
+            const oldProduction = calculateProduction(buildingType, currentLevel, count)
+            const newProduction = calculateProduction(buildingType, newLevel, count)
             const productionDifference = newProduction - oldProduction
             
             return {

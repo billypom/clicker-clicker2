@@ -136,11 +136,26 @@ export function BuildingButton({
           >
             <Text fontSize="sm">Owned: {owned}</Text>
           </Box>
+
+          {/* Level badge */}
+          <Box 
+            position="absolute" 
+            top="0" 
+            right="0" 
+            p={2} 
+            bg="blue.700"
+            borderTopRightRadius="md"
+            borderBottomLeftRadius="md"
+          >
+            <Text fontSize="xs" fontWeight="bold">Level {level}</Text>
+          </Box>
         </Box>
         
         <Text fontSize="sm" color="gray.400">{description}</Text>
         <Box>
-          <Text fontSize="sm">Production:</Text>
+          <Flex justifyContent="space-between" alignItems="center" mb={1}>
+            <Text fontSize="sm" fontWeight="bold">Production:</Text>
+          </Flex>
           <Text fontSize="sm">Points: {(pointsPerSecond * level).toFixed(1)}/s per building</Text>
           <Text fontSize="sm">Total: {(pointsPerSecond * level * owned).toFixed(1)}/s</Text>
         </Box>

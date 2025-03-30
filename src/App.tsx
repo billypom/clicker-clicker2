@@ -60,26 +60,19 @@ function App() {
 
   // Handle keyboard events
   useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      // Only allow clicks after terms are accepted and modal is closed
-      if (hasStarted) {
-        console.log('Key pressed:', e.key);
-        playClickSound(); // Play click sound
-        click();
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyPress)
-    return () => window.removeEventListener('keydown', handleKeyPress)
+    // Remove the local event listener since we're now handling events globally
+    // This listener is no longer needed
+    
+    return () => {}
   }, [click, hasStarted])
 
-  // Handle clicks anywhere in the game
+  // This is now handled globally, but we'll keep a simpler version
+  // for UI feedback only (cursor change, etc)
   const handleClick = (e: React.MouseEvent) => {
-    // Only allow clicks after terms are accepted and modal is closed
+    // Don't call click() here as it's now handled globally
+    // Just for visual feedback
     if (hasStarted) {
-      console.log('Mouse clicked');
-      playClickSound(); // Play click sound
-      click();
+      console.log('App container clicked - handled by global handler');
     }
   }
 

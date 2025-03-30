@@ -7,7 +7,6 @@ interface BuildingInfoProps {
   description: string
   production: {
     points?: number
-    techParts?: number
   }
 }
 
@@ -46,9 +45,6 @@ export const BuildingInfo = ({ isOpen, onClose, title, description, production }
             <h4 className="font-semibold mb-2">Production:</h4>
             {production.points && (
               <div className="text-green-400">+{production.points} points/s</div>
-            )}
-            {production.techParts && (
-              <div className="text-blue-400">+{production.techParts} tech parts/s</div>
             )}
           </div>
         </motion.div>

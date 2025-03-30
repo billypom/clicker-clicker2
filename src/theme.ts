@@ -38,6 +38,10 @@ const theme = extendTheme({
     useSystemColorMode: false,
   },
   colors,
+  fonts: {
+    heading: `'Press Start 2P', monospace`,
+    body: `system-ui, sans-serif`,
+  },
   styles: {
     global: {
       body: {
@@ -111,7 +115,26 @@ const theme = extendTheme({
     Heading: {
       baseStyle: {
         color: 'text.secondary',
+        letterSpacing: '0.5px',
       },
+      sizes: {
+        xl: {
+          fontSize: '1.5rem',
+          lineHeight: '1.4',
+        },
+        lg: {
+          fontSize: '1.2rem',
+          lineHeight: '1.4',
+        },
+        md: {
+          fontSize: '1rem',
+          lineHeight: '1.4',
+        },
+        sm: {
+          fontSize: '0.8rem',
+          lineHeight: '1.4',
+        },
+      }
     },
     Text: {
       variants: {
@@ -124,6 +147,10 @@ const theme = extendTheme({
         muted: {
           color: 'text.muted',
         },
+        pixel: {
+          fontFamily: `'Press Start 2P', monospace`,
+          letterSpacing: '0.5px',
+        }
       },
     },
     Modal: {

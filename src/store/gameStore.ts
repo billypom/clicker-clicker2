@@ -11,7 +11,6 @@ export interface BuildingInfo {
   description: string
   production: {
     points?: number
-    techParts?: number
   }
 }
 
@@ -93,21 +92,21 @@ export const BUILDING_INFO: Record<string, Omit<BuildingInfo, 'id'>> = {
   },
   keyboardFactories: {
     title: 'Keyboard Factory',
-    description: 'Manufactures mechanical keyboards and generates tech parts. Essential for advanced upgrades.',
+    description: 'Manufactures mechanical keyboards. Essential for advanced upgrades.',
     production: { points: 0.2 },
     cost: 50,
     levelRequirement: 1
   },
   monitorDisplays: {
     title: 'Monitor Display',
-    description: 'High-resolution displays that generate both points and tech parts. A balanced production facility.',
+    description: 'High-resolution displays that generate points. A balanced production facility.',
     production: { points: 0.2 },
     cost: 100,
     levelRequirement: 1
   },
   serverRooms: {
     title: 'Server Room',
-    description: 'A powerful facility that generates significant amounts of both resources. Requires proper cooling.',
+    description: 'A powerful facility that generates significant amounts of resources. Requires proper cooling.',
     production: { points: 5 },
     cost: 1000,
     levelRequirement: 1

@@ -88,7 +88,7 @@ export function ResourceDisplay() {
         >
           {/* Points */}
           <Box textAlign="center" minW="120px">
-            <Text fontSize="sm" fontWeight="bold" color="brand.300">Points</Text>
+            <Text fontSize="sm" fontWeight="bold" color="brand.300" variant="pixel">Points</Text>
             <Text fontSize="md" fontWeight="bold" color="text.primary">{formatNumber(Math.floor(points))}</Text>
             <Text fontSize="xs" color="text.secondary">+{formatNumber(pointsPerSecond)}/s</Text>
           </Box>
@@ -97,7 +97,7 @@ export function ResourceDisplay() {
 
           {/* Click Power with Upgrade Button */}
           <Box textAlign="center" minW="120px">
-            <Text fontSize="sm" fontWeight="bold" color="brand.300">Click Power</Text>
+            <Text fontSize="sm" fontWeight="bold" color="brand.300" variant="pixel">Click Power</Text>
             <Flex justify="center" align="center" gap={1}>
               <Text fontSize="md" color="text.primary">{formatNumber(clickPower)}</Text>
               <Tooltip label={`Upgrade to level ${clickPower + 1} (${formatNumber(clickPowerUpgradeCost)} points)`}>
@@ -124,7 +124,7 @@ export function ResourceDisplay() {
 
           {/* Level */}
           <Box textAlign="center" minW="80px">
-            <Text fontSize="sm" fontWeight="bold" color="brand.300">Level</Text>
+            <Text fontSize="sm" fontWeight="bold" color="brand.300" variant="pixel">Level</Text>
             <Text fontSize="md" color="text.primary">{playerLevel}</Text>
           </Box>
 

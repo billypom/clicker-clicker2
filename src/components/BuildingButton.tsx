@@ -147,7 +147,7 @@ export function BuildingButton({
             borderBottomRightRadius="md"
             boxShadow="0 1px 3px rgba(0,0,0,0.5)"
           >
-            <Text fontWeight="bold" fontSize="md" color="brand.200">{title}</Text>
+            <Text fontWeight="bold" fontSize="sm" color="brand.200" variant="pixel">{title}</Text>
           </Box>
           
           {/* Overlay for owned count */}
@@ -161,7 +161,7 @@ export function BuildingButton({
             borderBottomRightRadius="md"
             boxShadow="0 1px 3px rgba(0,0,0,0.5)"
           >
-            <Text fontSize="sm" color="brand.100">Owned: {formatNumber(owned)}</Text>
+            <Text fontSize="xs" color="brand.100">Owned: {formatNumber(owned)}</Text>
           </Box>
 
           {/* Level badge */}
@@ -182,7 +182,7 @@ export function BuildingButton({
         <Text fontSize="sm" color="text.secondary">{description}</Text>
         <Box p={2} bg="background.secondary" borderRadius="md">
           <Flex justifyContent="space-between" alignItems="center" mb={1}>
-            <Text fontSize="sm" fontWeight="bold" color="brand.300">Production:</Text>
+            <Text fontSize="sm" fontWeight="bold" color="brand.300" variant="pixel">Production:</Text>
           </Flex>
           <Text fontSize="sm" color="text.primary">Points: {formatNumber(pointsPerSecond * level)}/s per building</Text>
           <Text fontSize="sm" color="text.primary">Total: {formatNumber(pointsPerSecond * level * owned)}/s</Text>

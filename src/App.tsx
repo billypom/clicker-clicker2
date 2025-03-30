@@ -98,6 +98,10 @@ function App() {
           <Container maxW="container.xl">
             <VStack spacing={8}>
               <VStack spacing={8} w="full">
+                {/* Game Title */}
+                <Box textAlign="center" mt={10} mb={5}>
+                  <Heading as="h1" size="lg" color="brand.300">Clicker Clicker 2</Heading>
+                </Box>
                 {/* Buildings Grid */}
                 <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
                   {availableBuildings.map((building) => (

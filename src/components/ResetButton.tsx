@@ -7,8 +7,6 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useDisclosure,
-  IconButton,
-  Tooltip
 } from '@chakra-ui/react'
 import React, { useRef } from 'react'
 import { useGameStore } from '../store/gameStore'
@@ -25,17 +23,14 @@ export function ResetButton() {
 
   return (
     <>
-      <Tooltip label="Reset Game">
-        <IconButton
-          aria-label="Reset Game"
-          icon={<span>🔄</span>}
-          onClick={onOpen}
-          colorScheme="red"
-          size="md"
-          variant="ghost"
-          borderRadius="full"
-        />
-      </Tooltip>
+      <Button
+        onClick={onOpen}
+        colorScheme="red"
+        size="sm"
+        variant="ghost"
+      >
+        Reset
+      </Button>
 
       <AlertDialog
         isOpen={isOpen}

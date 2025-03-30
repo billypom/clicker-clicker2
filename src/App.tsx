@@ -139,45 +139,33 @@ function App() {
             <VStack spacing={8}>
               <Box textAlign="center" w="full" position="relative">
                 <Flex direction="column" align="center" mb={4}>
-                  <Box maxW="400px" mb={2}>
-                    <Image src={logoImg} alt="Clicker Clicker 2" />
-                  </Box>
-                  <Text fontSize="xl" color="cyan.400" fontWeight="bold" mt={2}>
-                    Click anywhere to start (and then scroll down)
-                  </Text>
+                  {points === 0 && (
+                    <Text fontSize="xl" color="cyan.400" fontWeight="bold" mt={2}>
+                      Click anywhere to start
+                    </Text>
+                  )}
                 </Flex>
-                
-                {/* Reset button positioned in the top right */}
-                <Box position="absolute" top={0} right={0}>
-                  <ResetButton />
-                </Box>
               </Box>
               
               <VStack spacing={8} w="full">
-                {/* Shop Section */}
-                <Box bg="gray.800" p={6} borderRadius="lg" w="full">
-                  <Flex justify="space-between" align="center" mb={6}>
-                    <Heading as="h2" size="xl" color="blue.400">Shop</Heading>
-                    <Text fontSize="lg" color="yellow.400">Level {playerLevel}</Text>
-                  </Flex>
-                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
-                    {availableBuildings.map((building) => (
-                      <BuildingButton
-                        key={building.id}
-                        title={building.title}
-                        cost={building.cost}
-                        owned={useGameStore.getState()[building.id as BuildingId]}
-                        level={useGameStore.getState()[`${building.id}Level` as BuildingLevelKey] as number}
-                        onClick={() => useGameStore.getState().buyBuilding(building.id as BuildingId)}
-                        description={building.description}
-                        production={building.production}
-                        buildingType={building.id}
-                        levelRequirement={building.levelRequirement}
-                      />
-                    ))}
-                    <NextBuildingPreview />
-                  </SimpleGrid>
-                </Box>
+                {/* Buildings Grid */}
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
+                  {availableBuildings.map((building) => (
+                    <BuildingButton
+                      key={building.id}
+                      title={building.title}
+                      cost={building.cost}
+                      owned={useGameStore.getState()[building.id as BuildingId]}
+                      level={useGameStore.getState()[`${building.id}Level` as BuildingLevelKey] as number}
+                      onClick={() => useGameStore.getState().buyBuilding(building.id as BuildingId)}
+                      description={building.description}
+                      production={building.production}
+                      buildingType={building.id}
+                      levelRequirement={building.levelRequirement}
+                    />
+                  ))}
+                  <NextBuildingPreview />
+                </SimpleGrid>
 
                 <Box h="1px" bg="gray.600" w="full" />
 

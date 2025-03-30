@@ -4,6 +4,7 @@ import { NextBuildingPreview } from './components/NextBuildingPreview'
 import { ResetButton } from './components/ResetButton'
 import { useGameStore } from './store/gameStore'
 import { playClickSound, initAudio } from './utils/soundUtils'
+import { formatNumber } from './utils/numberUtils'
 import { 
   ChakraProvider, 
   Box, 
@@ -115,17 +116,6 @@ function App() {
                   ))}
                   <NextBuildingPreview />
                 </SimpleGrid>
-
-                <Box h="1px" bg="gray.600" w="full" />
-
-                {/* Upgrades Section */}
-                <Box bg="gray.800" p={6} borderRadius="lg" w="full">
-                  <Heading as="h2" size="xl" mb={6} color="green.400">Upgrades</Heading>
-                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
-                    {/* Click Power button has been moved to ResourceDisplay header */}
-                    {/* Add other upgrades here in the future */}
-                  </SimpleGrid>
-                </Box>
               </VStack>
             </VStack>
           </Container>

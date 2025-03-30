@@ -11,6 +11,7 @@ import {
   AspectRatio
 } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
+import { formatNumber } from '../utils/numberUtils'
 
 // Import all building images
 import mouseImg from '../assets/mouse.png'
@@ -96,7 +97,7 @@ export function BuildingButton({
     if (owned === 0) {
       return "You need to own this building first";
     } else if (points < upgradeCost) {
-      return `Not enough points (${points}/${upgradeCost})`;
+      return `Not enough points (${formatNumber(points)}/${formatNumber(upgradeCost)})`;
     }
     return `Upgrade to level ${level + 1}`;
   };
@@ -150,7 +151,7 @@ export function BuildingButton({
             borderTopLeftRadius="md"
             borderBottomRightRadius="md"
           >
-            <Text fontSize="sm">Owned: {owned}</Text>
+            <Text fontSize="sm">Owned: {formatNumber(owned)}</Text>
           </Box>
 
           {/* Level badge */}
@@ -172,8 +173,8 @@ export function BuildingButton({
           <Flex justifyContent="space-between" alignItems="center" mb={1}>
             <Text fontSize="sm" fontWeight="bold">Production:</Text>
           </Flex>
-          <Text fontSize="sm">Points: {(pointsPerSecond * level).toFixed(1)}/s per building</Text>
-          <Text fontSize="sm">Total: {(pointsPerSecond * level * owned).toFixed(1)}/s</Text>
+          <Text fontSize="sm">Points: {formatNumber(pointsPerSecond * level)}/s per building</Text>
+          <Text fontSize="sm">Total: {formatNumber(pointsPerSecond * level * owned)}/s</Text>
         </Box>
         <HStack spacing={2}>
           <Button 
@@ -185,7 +186,7 @@ export function BuildingButton({
             size="sm"
             flexGrow={1}
           >
-            Buy ({cost} points)
+            Buy ({formatNumber(cost)} points)
           </Button>
           <Tooltip label={getUpgradeTooltip()}>
             <Button 
@@ -197,7 +198,7 @@ export function BuildingButton({
               size="sm"
               flexGrow={1}
             >
-              Upgrade ({upgradeCost} points)
+              Upgrade ({formatNumber(upgradeCost)} points)
             </Button>
           </Tooltip>
         </HStack>

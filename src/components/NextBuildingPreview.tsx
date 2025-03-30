@@ -7,6 +7,7 @@ import {
 } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
 import { BUILDING_INFO } from '../store/gameStore'
+import { formatNumber } from '../utils/numberUtils'
 
 interface BuildingInfo {
   cost: number
@@ -48,12 +49,12 @@ export function NextBuildingPreview() {
           </Box>
           <Text fontSize="sm" color="gray.400">{info.description}</Text>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Text>Cost: {info.cost} points</Text>
+            <Text>Cost: {formatNumber(info.cost)} points</Text>
             <Text>Level Required: {info.levelRequirement}</Text>
           </Box>
           <Box>
             <Text fontSize="sm">Production:</Text>
-            <Text fontSize="sm">Points: {info.production.points}/s</Text>
+            <Text fontSize="sm">Points: {formatNumber(info.production.points || 0)}/s</Text>
           </Box>
         </VStack>
       </Box>

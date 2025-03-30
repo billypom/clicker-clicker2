@@ -4,6 +4,7 @@ import logoImg from '../assets/logo.png'
 import { ResetButton } from './ResetButton'
 import { SoundToggleButton } from './SoundToggleButton'
 import { AddIcon } from '@chakra-ui/icons'
+import { formatNumber } from '../utils/numberUtils'
 
 export function ResourceDisplay() {
   const { points, pointsPerSecond, clickPower, playerLevel, getClickPowerUpgradeCost, buyUpgrade } = useGameStore()
@@ -87,8 +88,8 @@ export function ResourceDisplay() {
           {/* Points */}
           <Box textAlign="center" minW="120px">
             <Text fontSize="sm" fontWeight="bold">Points</Text>
-            <Text fontSize="md" fontWeight="bold">{Math.floor(points)}</Text>
-            <Text fontSize="xs" color="green.400">+{pointsPerSecond.toFixed(1)}/s</Text>
+            <Text fontSize="md" fontWeight="bold">{formatNumber(Math.floor(points))}</Text>
+            <Text fontSize="xs" color="green.400">+{formatNumber(pointsPerSecond)}/s</Text>
           </Box>
 
           <Divider orientation="vertical" h="40px" />
@@ -97,8 +98,8 @@ export function ResourceDisplay() {
           <Box textAlign="center" minW="120px">
             <Text fontSize="sm" fontWeight="bold">Click Power</Text>
             <Flex justify="center" align="center" gap={1}>
-              <Text fontSize="md">{clickPower}</Text>
-              <Tooltip label={`Upgrade to level ${clickPower + 1} (${clickPowerUpgradeCost} points)`}>
+              <Text fontSize="md">{formatNumber(clickPower)}</Text>
+              <Tooltip label={`Upgrade to level ${clickPower + 1} (${formatNumber(clickPowerUpgradeCost)} points)`}>
                 <Button
                   size="xs"
                   colorScheme="green"
@@ -126,7 +127,7 @@ export function ResourceDisplay() {
           </Box>
 
           {/* Progress to next level */}
-          <Tooltip label={`${pointsPerSecond.toFixed(1)}/${nextLevelPPS} PPS`}>
+          <Tooltip label={`${formatNumber(pointsPerSecond)}/${formatNumber(nextLevelPPS)} PPS`}>
             <Box flex="1" maxW="300px">
               <Flex justify="space-between" mb={1}>
                 <Text fontSize="xs" color="gray.400">Level {playerLevel}</Text>

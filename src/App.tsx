@@ -1,4 +1,3 @@
-import { Mouse } from './components/Mouse'
 import { ResourceDisplay } from './components/ResourceDisplay'
 import { BuildingButton } from './components/BuildingButton'
 import { MultiplierShop } from './components/MultiplierShop'
@@ -102,7 +101,8 @@ function App() {
     playerLevel,
     getAvailableBuildings,
     tick,
-    clickPower
+    clickPower,
+    click
   } = useGameStore()
 
   const availableBuildings = getAvailableBuildings()
@@ -113,9 +113,27 @@ function App() {
     return () => clearInterval(interval)
   }, [tick])
 
+  // Handle clicks anywhere in the game
+  const handleClick = (e: React.MouseEvent) => {
+    // Don't count clicks on buttons or interactive elements
+    if (e.target instanceof HTMLElement && 
+        (e.target.tagName === 'BUTTON' || 
+         e.target.closest('button') || 
+         e.target.closest('[role="button"]'))) {
+      return
+    }
+    click()
+  }
+
   return (
     <ChakraProvider theme={theme}>
-      <Box minH="100vh" bg="gray.900" color="white">
+      <Box 
+        minH="100vh" 
+        bg="gray.900" 
+        color="white"
+        onClick={handleClick}
+        cursor="pointer"
+      >
         <ResourceDisplay />
         <Box pt="180px">
           <Container maxW="container.xl">
@@ -124,8 +142,6 @@ function App() {
                 <Heading as="h1" size="2xl" mb={4}>Clicker Clicker 2</Heading>
                 <Text fontSize="xl" color="yellow.400" mb={4}>Level {playerLevel}</Text>
               </Box>
-
-              <Mouse />
               
               <VStack spacing={8} w="full">
                 {/* Shop Section */}

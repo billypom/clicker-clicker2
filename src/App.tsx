@@ -36,6 +36,7 @@ function App() {
     getAvailableBuildings,
     tick,
     click,
+    setPlayerAccepted,
   } = useGameStore()
 
   const [agreedToTerms, setAgreedToTerms] = useState(false)
@@ -72,8 +73,9 @@ function App() {
     if (agreedToTerms) {
       // Initialize audio on first user interaction
       initAudio();
-      setHasStarted(true)
-      onClose()
+      setHasStarted(true);
+      setPlayerAccepted(true); // Set player as accepted in game store
+      onClose();
     }
   }
 

@@ -29,18 +29,20 @@ function AppWithGlobalHandlers() {
 
   useEffect(() => {
     const handleGlobalClick = () => {
-      // Only trigger if game has started
+      // Only trigger if game has started or the game is in a fresh state
       const gameState = useGameStore.getState();
-      if ((gameStarted || gameState.points > 0) && gameState.playerLevel >= 1) {
+      // Also check if player has accepted employment
+      if ((gameStarted || gameState.points >= 0) && gameState.playerAccepted) {
         playClickSound();
         gameState.click();
       }
     };
 
     const handleGlobalKeyPress = () => {
-      // Only trigger if game has started
+      // Only trigger if game has started or the game is in a fresh state
       const gameState = useGameStore.getState();
-      if ((gameStarted || gameState.points > 0) && gameState.playerLevel >= 1) {
+      // Also check if player has accepted employment
+      if ((gameStarted || gameState.points >= 0) && gameState.playerAccepted) {
         playClickSound();
         gameState.click();
       }

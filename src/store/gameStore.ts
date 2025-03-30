@@ -63,6 +63,9 @@ interface GameState {
   // Player level
   playerLevel: number
   
+  // Player state
+  playerAccepted: boolean
+  
   // Actions
   click: () => void
   buyBuilding: (buildingType: BuildingType) => void
@@ -73,6 +76,7 @@ interface GameState {
   getClickPowerUpgradeCost: () => number
   canUpgradeBuilding: (buildingType: BuildingType) => boolean
   getBuildingUpgradeCost: (buildingType: BuildingType) => number
+  setPlayerAccepted: (accepted: boolean) => void
 
   // New getter for available buildings
   getAvailableBuildings: () => BuildingInfo[]
@@ -220,6 +224,7 @@ const initialState = {
   clickPowerUpgrades: 0,
   pointsPerSecond: 0,
   playerLevel: 1,
+  playerAccepted: false,
 }
 
 // Production rates per building
@@ -363,7 +368,11 @@ export const useGameStore = create<GameState>()(
       ...initialState,
 
       click: () => {
-        const { clickPower, autoClickers } = get()
+        const { clickPower, autoClickers, playerAccepted } = get()
+        
+        // Only allow clicks if player has accepted the employment agreement
+        if (!playerAccepted) return
+        
         const pointsPerClick = clickPower * (1 + autoClickers * 0.1)
         set((state) => ({
           points: state.points + pointsPerClick,
@@ -495,10 +504,14 @@ export const useGameStore = create<GameState>()(
       
       resetGame: () => {
         set(initialState)
+        window.location.reload()
       },
 
       tick: () => {
         const state = get()
+        
+        // Don't add production if player hasn't accepted employment
+        if (!state.playerAccepted) return
         
         // Add production from buildings
         if (state.pointsPerSecond > 0) {
@@ -524,6 +537,10 @@ export const useGameStore = create<GameState>()(
       getAvailableBuildings: () => {
         const { playerLevel } = get()
         return getAvailableBuildings(playerLevel)
+      },
+
+      setPlayerAccepted: (accepted: boolean) => {
+        set({ playerAccepted: accepted })
       },
     }),
     {

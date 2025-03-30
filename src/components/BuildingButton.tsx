@@ -104,11 +104,17 @@ export function BuildingButton({
 
   return (
     <Box
-      bg="gray.700"
+      bg="background.card"
       p={4}
       borderRadius="lg"
       border="1px"
-      borderColor="gray.600"
+      borderColor="brand.700"
+      boxShadow="0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.24)"
+      transition="all 0.2s ease-in-out"
+      _hover={{
+        transform: "translateY(-2px)",
+        boxShadow: "0 6px 10px -1px rgba(0, 0, 0, 0.4), 0 4px 6px -1px rgba(0, 0, 0, 0.3)"
+      }}
     >
       <VStack align="stretch" spacing={2}>
         {/* Image with overlapping title and stats */}
@@ -117,6 +123,8 @@ export function BuildingButton({
             <Box 
               borderRadius="md" 
               overflow="hidden"
+              borderWidth="2px"
+              borderColor="brand.800"
             >
               <Image 
                 src={buildingImages[buildingType as keyof typeof buildingImages]} 
@@ -134,11 +142,12 @@ export function BuildingButton({
             top="0" 
             left="0" 
             p={2} 
-            bg="blackAlpha.700"
+            bg="background.cardOverlay"
             borderTopLeftRadius="md"
             borderBottomRightRadius="md"
+            boxShadow="0 1px 3px rgba(0,0,0,0.5)"
           >
-            <Text fontWeight="bold" fontSize="md">{title}</Text>
+            <Text fontWeight="bold" fontSize="md" color="brand.200">{title}</Text>
           </Box>
           
           {/* Overlay for owned count */}
@@ -147,11 +156,12 @@ export function BuildingButton({
             bottom="0" 
             right="0" 
             p={2} 
-            bg="blackAlpha.700"
+            bg="background.cardOverlay"
             borderTopLeftRadius="md"
             borderBottomRightRadius="md"
+            boxShadow="0 1px 3px rgba(0,0,0,0.5)"
           >
-            <Text fontSize="sm">Owned: {formatNumber(owned)}</Text>
+            <Text fontSize="sm" color="brand.100">Owned: {formatNumber(owned)}</Text>
           </Box>
 
           {/* Level badge */}
@@ -160,29 +170,32 @@ export function BuildingButton({
             top="0" 
             right="0" 
             p={2} 
-            bg="blue.700"
+            bg="brand.400"
             borderTopRightRadius="md"
             borderBottomLeftRadius="md"
+            boxShadow="0 1px 3px rgba(0,0,0,0.5)"
           >
-            <Text fontSize="xs" fontWeight="bold">Level {level}</Text>
+            <Text fontSize="xs" fontWeight="bold" color="text.dark">Level {level}</Text>
           </Box>
         </Box>
         
-        <Text fontSize="sm" color="gray.400">{description}</Text>
-        <Box>
+        <Text fontSize="sm" color="text.secondary">{description}</Text>
+        <Box p={2} bg="background.secondary" borderRadius="md">
           <Flex justifyContent="space-between" alignItems="center" mb={1}>
-            <Text fontSize="sm" fontWeight="bold">Production:</Text>
+            <Text fontSize="sm" fontWeight="bold" color="brand.300">Production:</Text>
           </Flex>
-          <Text fontSize="sm">Points: {formatNumber(pointsPerSecond * level)}/s per building</Text>
-          <Text fontSize="sm">Total: {formatNumber(pointsPerSecond * level * owned)}/s</Text>
+          <Text fontSize="sm" color="text.primary">Points: {formatNumber(pointsPerSecond * level)}/s per building</Text>
+          <Text fontSize="sm" color="text.primary">Total: {formatNumber(pointsPerSecond * level * owned)}/s</Text>
         </Box>
         <HStack spacing={2}>
           <Button 
             onClick={onClick}
             opacity={isDisabledStyle ? 0.4 : 1}
-            _hover={{ bg: 'blue.600', opacity: isDisabledStyle ? 0.4 : 1 }}
+            _hover={{ bg: 'brand.500', opacity: isDisabledStyle ? 0.4 : 1 }}
             cursor={isDisabledStyle ? 'not-allowed' : 'pointer'}
-            colorScheme="blue"
+            colorScheme="brand"
+            bg="brand.400"
+            color="text.dark"
             size="sm"
             flexGrow={1}
           >
@@ -192,11 +205,12 @@ export function BuildingButton({
             <Button 
               onClick={() => upgradeBuilding(buildingType as keyof typeof buildingImages)}
               opacity={!canUpgrade ? 0.4 : 1}
-              _hover={{ bg: 'green.600', opacity: !canUpgrade ? 0.4 : 1 }}
+              _hover={{ bg: 'background.highlight', opacity: !canUpgrade ? 0.4 : 1 }}
               cursor={!canUpgrade ? 'not-allowed' : 'pointer'}
-              colorScheme="green"
+              colorScheme="brand"
               size="sm"
               flexGrow={1}
+              variant="outline"
             >
               Upgrade ({formatNumber(upgradeCost)} points)
             </Button>

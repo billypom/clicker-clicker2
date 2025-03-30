@@ -20,7 +20,7 @@ export function SoundToggleButton() {
         icon={<span>{soundOn ? '🔊' : '🔇'}</span>}
         onClick={handleToggle}
         variant="ghost"
-        colorScheme="cyan"
+        colorScheme="brand"
         size="md"
       />
     </Tooltip>

@@ -38,8 +38,8 @@ export function ResetButton() {
         onClose={onClose}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent bg="gray.800" color="white">
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+          <AlertDialogContent bg="background.secondary" color="white">
+            <AlertDialogHeader fontSize="lg" fontWeight="bold" color="brand.300">
               Reset Game
             </AlertDialogHeader>
 
@@ -48,7 +48,7 @@ export function ResetButton() {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button ref={cancelRef} onClick={onClose} colorScheme="brand" variant="outline">
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={handleReset} ml={3}>

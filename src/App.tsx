@@ -88,7 +88,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <Box 
         minH="100vh" 
-        bg="gray.900" 
+        bg="background.primary" 
         color="white"
         onClick={handleClick}
         cursor={hasStarted ? "pointer" : "default"}
@@ -130,14 +130,14 @@ function App() {
           size="2xl"
         >
           <ModalOverlay />
-          <ModalContent bg="gray.800" color="white" maxW="800px">
-            <ModalHeader borderBottom="1px" borderColor="gray.700" pb={4}>
+          <ModalContent bg="background.secondary" color="white" maxW="800px">
+            <ModalHeader borderBottom="1px" borderColor="brand.700" pb={4}>
               Welcome to ClickerCorp™
             </ModalHeader>
             <ModalBody py={6}>
               <VStack spacing={6} align="stretch">
                 <Box>
-                  <Text fontSize="lg" fontWeight="bold" mb={2}>
+                  <Text fontSize="lg" fontWeight="bold" mb={2} color="brand.300">
                     Employment Agreement
                   </Text>
                   <Text fontSize="md" color="gray.300" lineHeight="1.6">
@@ -149,7 +149,7 @@ function App() {
                 </Box>
 
                 <Box>
-                  <Text fontSize="lg" fontWeight="bold" mb={2}>
+                  <Text fontSize="lg" fontWeight="bold" mb={2} color="brand.300">
                     Controls & Operations
                   </Text>
                   <Text fontSize="md" color="gray.300" lineHeight="1.6">
@@ -158,13 +158,13 @@ function App() {
                 </Box>
 
                 <Box>
-                  <Text fontSize="sm" color="gray.400" fontStyle="italic">
+                  <Text fontSize="sm" color="brand.200" fontStyle="italic">
                     (Please note: This position is unpaid and offers exposure as compensation)
                   </Text>
                 </Box>
 
                 <Checkbox 
-                  colorScheme="cyan"
+                  colorScheme="brand"
                   isChecked={agreedToTerms}
                   onChange={(e) => setAgreedToTerms(e.target.checked)}
                 >
@@ -172,9 +172,9 @@ function App() {
                 </Checkbox>
               </VStack>
             </ModalBody>
-            <ModalFooter borderTop="1px" borderColor="gray.700" pt={4}>
+            <ModalFooter borderTop="1px" borderColor="brand.700" pt={4}>
               <Button
-                colorScheme="cyan"
+                colorScheme="brand"
                 isDisabled={!agreedToTerms}
                 onClick={handleStartGame}
                 w="full"

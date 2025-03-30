@@ -3,6 +3,7 @@ import { BuildingButton } from './components/BuildingButton'
 import { NextBuildingPreview } from './components/NextBuildingPreview'
 import { ResetButton } from './components/ResetButton'
 import { useGameStore } from './store/gameStore'
+import { playClickSound, initAudio } from './utils/soundUtils'
 import { 
   ChakraProvider, 
   Box, 
@@ -62,7 +63,9 @@ function App() {
     const handleKeyPress = (e: KeyboardEvent) => {
       // Only allow clicks after terms are accepted and modal is closed
       if (hasStarted) {
-        click()
+        console.log('Key pressed:', e.key);
+        playClickSound(); // Play click sound
+        click();
       }
     }
 
@@ -74,13 +77,17 @@ function App() {
   const handleClick = (e: React.MouseEvent) => {
     // Only allow clicks after terms are accepted and modal is closed
     if (hasStarted) {
-      click()
+      console.log('Mouse clicked');
+      playClickSound(); // Play click sound
+      click();
     }
   }
 
   // Handle starting the game
   const handleStartGame = () => {
     if (agreedToTerms) {
+      // Initialize audio on first user interaction
+      initAudio();
       setHasStarted(true)
       onClose()
     }

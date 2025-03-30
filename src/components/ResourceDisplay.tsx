@@ -2,6 +2,7 @@ import { Box, HStack, Text, Progress, Flex, Divider, Tooltip, Image } from '@cha
 import { useGameStore } from '../store/gameStore'
 import logoImg from '../assets/logo.png'
 import { ResetButton } from './ResetButton'
+import { SoundToggleButton } from './SoundToggleButton'
 
 export function ResourceDisplay() {
   const { points, pointsPerSecond, clickPower, playerLevel } = useGameStore()
@@ -57,16 +58,19 @@ export function ResourceDisplay() {
           />
         </Box>
 
-        {/* Reset button */}
-        <Box 
+        {/* Control buttons */}
+        <Flex 
           position="absolute" 
           right={4} 
           top="50%" 
           transform="translateY(-50%)"
           zIndex={1}
+          gap={2}
+          align="center"
         >
+          <SoundToggleButton />
           <ResetButton />
-        </Box>
+        </Flex>
 
         {/* Main content - centered */}
         <Flex 

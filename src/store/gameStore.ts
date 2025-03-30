@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { playPurchaseSound, playLevelUpSound, playUpgradeSound } from '../utils/soundUtils'
 
 // Building information interface
 export interface BuildingInfo {
@@ -364,7 +365,19 @@ export const useGameStore = create<GameState>()(
       buyBuilding: (buildingType: BuildingType) => {
         const state = get()
         const cost = BUILDING_COSTS[buildingType]
+        
+        // Get building info for level requirement check
+        const info = BUILDING_INFO[buildingType];
+        
+        // Check if player meets level requirement
+        if (state.playerLevel < info.levelRequirement) {
+          return;
+        }
+        
         if (state.points >= cost) {
+          // Play purchase sound
+          playPurchaseSound()
+          
           set((state) => {
             const newCount = state[buildingType] + 1
             const level = state[`${buildingType}Level` as keyof GameState] as number
@@ -383,20 +396,24 @@ export const useGameStore = create<GameState>()(
         }
       },
 
-      buyUpgrade: (upgradeType: UpgradeType) => {
-        const state = get()
+      buyUpgrade: (type: UpgradeType) => {
+        const state = get();
         
-        // Handle upgrade purchase
-        if (upgradeType === 'clickPower') {
-          const cost = calculateClickPowerUpgradeCost(state.clickPowerUpgrades)
+        if (type === 'clickPower') {
+          const cost = get().getClickPowerUpgradeCost();
           
-          if (state.points >= cost) {
-            set((state) => ({
-              points: state.points - cost,
-              clickPower: state.clickPower + 1,
-              clickPowerUpgrades: state.clickPowerUpgrades + 1
-            }))
-          }
+          // Check if we have enough points
+          if (state.points < cost) return;
+          
+          // Apply the upgrade
+          set({
+            points: state.points - cost,
+            clickPower: state.clickPower + 1,
+            clickPowerUpgrades: state.clickPowerUpgrades + 1
+          });
+          
+          // Play upgrade sound instead of purchase sound
+          playUpgradeSound();
         }
       },
 
@@ -411,6 +428,9 @@ export const useGameStore = create<GameState>()(
         const cost = calculateUpgradeCost(buildingType, currentLevel)
         
         if (state.points >= cost && state[buildingType] > 0) {
+          // Play upgrade sound instead of purchase sound
+          playUpgradeSound()
+          
           set((state) => {
             const newLevel = (state[`${buildingType}Level` as keyof GameState] as number) + 1
             const count = state[buildingType]
@@ -444,9 +464,16 @@ export const useGameStore = create<GameState>()(
         }
         
         // Update player level based on points per second
-        const playerLevel = Math.max(1, Math.floor(Math.log10(state.pointsPerSecond) + 1))
-        if (playerLevel !== state.playerLevel) {
-          set({ playerLevel })
+        const currentLevel = state.playerLevel
+        const newLevel = Math.max(1, Math.floor(Math.log10(state.pointsPerSecond) + 1))
+        
+        if (newLevel !== currentLevel) {
+          // If level has increased, play the level up sound
+          if (newLevel > currentLevel) {
+            playLevelUpSound()
+          }
+          
+          set({ playerLevel: newLevel })
         }
       },
 

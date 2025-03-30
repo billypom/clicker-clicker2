@@ -76,6 +76,15 @@ interface GameState {
 
   // New getter for available buildings
   getAvailableBuildings: () => BuildingInfo[]
+
+  // Replace single multiplier with array of active multipliers
+  activeMultipliers: Array<{
+    multiplier: number
+    endTime: number
+  }>
+
+  // Add getter for total multiplier
+  getTotalMultiplier: () => number
 }
 
 type BuildingType = 
@@ -134,6 +143,7 @@ const initialState = {
   clickMultiplier: 1,
   multiplierEndTime: null,
   playerLevel: 1,
+  activeMultipliers: [],
 }
 
 // Production rates per building
@@ -398,8 +408,13 @@ export const useGameStore = create<GameState>()(
           const now = Date.now()
           set((state) => ({
             techParts: state.techParts - purchase.cost,
-            clickMultiplier: multiplier,
-            multiplierEndTime: now + duration * 1000,
+            activeMultipliers: [
+              ...state.activeMultipliers,
+              {
+                multiplier,
+                endTime: now + duration * 1000
+              }
+            ]
           }))
         }
       },
@@ -408,9 +423,10 @@ export const useGameStore = create<GameState>()(
         const state = get()
         const now = Date.now()
         
-        // Check if multiplier has expired
-        if (state.multiplierEndTime && now >= state.multiplierEndTime) {
-          set({ clickMultiplier: 1, multiplierEndTime: null })
+        // Check for expired multipliers
+        const activeMultipliers = state.activeMultipliers.filter(m => m.endTime > now)
+        if (activeMultipliers.length !== state.activeMultipliers.length) {
+          set({ activeMultipliers })
         }
 
         // Update player level based on points per second
@@ -437,6 +453,15 @@ export const useGameStore = create<GameState>()(
       getAvailableBuildings: () => {
         const state = get()
         return getAvailableBuildings(state.playerLevel)
+      },
+
+      // Add getter for total multiplier
+      getTotalMultiplier: () => {
+        const state = get()
+        const now = Date.now()
+        return state.activeMultipliers
+          .filter(m => m.endTime > now)
+          .reduce((total, m) => total + (m.multiplier - 1), 1) // Subtract 1 from each multiplier and add 1 at the end
       },
     }),
     {

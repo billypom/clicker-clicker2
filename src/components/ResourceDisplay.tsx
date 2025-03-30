@@ -1,11 +1,12 @@
-import { Box, HStack, Text, Progress, Flex, Divider, Tooltip, Image } from '@chakra-ui/react'
+import { Box, HStack, Text, Progress, Flex, Divider, Tooltip, Image, Button, Icon } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
 import logoImg from '../assets/logo.png'
 import { ResetButton } from './ResetButton'
 import { SoundToggleButton } from './SoundToggleButton'
+import { AddIcon } from '@chakra-ui/icons'
 
 export function ResourceDisplay() {
-  const { points, pointsPerSecond, clickPower, playerLevel } = useGameStore()
+  const { points, pointsPerSecond, clickPower, playerLevel, getClickPowerUpgradeCost, buyUpgrade } = useGameStore()
 
   // Calculate progress to next level
   const currentLevelPPS = Math.pow(10, playerLevel - 1)
@@ -20,6 +21,9 @@ export function ResourceDisplay() {
     // For levels > 1, show progress from currentLevelPPS to nextLevelPPS
     progress = Math.min(Math.max(((pointsPerSecond - currentLevelPPS) / (nextLevelPPS - currentLevelPPS)) * 100, 0), 100);
   }
+
+  const clickPowerUpgradeCost = getClickPowerUpgradeCost();
+  const canAffordUpgrade = points >= clickPowerUpgradeCost;
 
   return (
     <Box
@@ -89,10 +93,28 @@ export function ResourceDisplay() {
 
           <Divider orientation="vertical" h="40px" />
 
-          {/* Click Power */}
+          {/* Click Power with Upgrade Button */}
           <Box textAlign="center" minW="120px">
             <Text fontSize="sm" fontWeight="bold">Click Power</Text>
-            <Text fontSize="md">{clickPower}</Text>
+            <Flex justify="center" align="center" gap={1}>
+              <Text fontSize="md">{clickPower}</Text>
+              <Tooltip label={`Upgrade to level ${clickPower + 1} (${clickPowerUpgradeCost} points)`}>
+                <Button
+                  size="xs"
+                  colorScheme="green"
+                  variant="outline"
+                  p={1}
+                  height="20px"
+                  minW="20px"
+                  onClick={() => buyUpgrade('clickPower')}
+                  opacity={canAffordUpgrade ? 1 : 0.4}
+                  cursor={canAffordUpgrade ? 'pointer' : 'not-allowed'}
+                  _hover={{ bg: 'green.800', opacity: canAffordUpgrade ? 1 : 0.4 }}
+                >
+                  <AddIcon boxSize={2} />
+                </Button>
+              </Tooltip>
+            </Flex>
           </Box>
 
           <Divider orientation="vertical" h="40px" />

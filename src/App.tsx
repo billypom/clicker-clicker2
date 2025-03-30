@@ -41,16 +41,13 @@ function App() {
     playerLevel,
     getAvailableBuildings,
     tick,
-    clickPower,
     click,
-    getClickPowerUpgradeCost
   } = useGameStore()
 
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [hasStarted, setHasStarted] = useState(false)
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
   const availableBuildings = getAvailableBuildings()
-  const clickPowerUpgradeCost = getClickPowerUpgradeCost()
 
   // Set up game tick interval
   useEffect(() => {
@@ -125,32 +122,8 @@ function App() {
                 <Box bg="gray.800" p={6} borderRadius="lg" w="full">
                   <Heading as="h2" size="xl" mb={6} color="green.400">Upgrades</Heading>
                   <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
-                    <Box
-                      bg="gray.700"
-                      p={4}
-                      borderRadius="lg"
-                      border="1px"
-                      borderColor="gray.600"
-                    >
-                      <VStack align="stretch" spacing={2}>
-                        <Box display="flex" justifyContent="space-between" alignItems="center">
-                          <Text fontWeight="bold">Click Power</Text>
-                          <Text>Level {clickPower}</Text>
-                        </Box>
-                        <Text fontSize="sm" color="gray.400">
-                          Each click generates {clickPower} points
-                        </Text>
-                        <Button 
-                          onClick={() => useGameStore.getState().buyUpgrade('clickPower')}
-                          opacity={points < clickPowerUpgradeCost ? 0.4 : 1}
-                          _hover={{ bg: 'gray.500', opacity: points < clickPowerUpgradeCost ? 0.4 : 1 }}
-                          bg="gray.600"
-                          cursor={points < clickPowerUpgradeCost ? 'not-allowed' : 'pointer'}
-                        >
-                          Upgrade ({clickPowerUpgradeCost} points)
-                        </Button>
-                      </VStack>
-                    </Box>
+                    {/* Click Power button has been moved to ResourceDisplay header */}
+                    {/* Add other upgrades here in the future */}
                   </SimpleGrid>
                 </Box>
               </VStack>

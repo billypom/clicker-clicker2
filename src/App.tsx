@@ -18,7 +18,7 @@ import {
 import theme from './theme'
 import { useEffect } from 'react'
 
-type BuildingId = 'mouseFarms' | 'keyboardFactories' | 'monitorDisplays' | 'serverRooms' | 'dataCenters' | 
+type BuildingId = 'mouseFarms' | 'keyboardFactories' | 'monitorDisplays' | 'officeSpace' | 'serverRooms' | 'dataCenters' | 
                   'dataCities' | 'dataCountries' | 'dataContinents' | 'dataWorlds' | 'dataMoons' | 
                   'dataSolarSystems' | 'dataGalaxies' | 'dataUniverses' | 'dataGods'
 

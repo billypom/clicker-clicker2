@@ -21,6 +21,7 @@ interface GameState {
   mouseFarms: number
   keyboardFactories: number
   monitorDisplays: number
+  officeSpace: number
   serverRooms: number
   dataCenters: number
   dataCities: number
@@ -37,6 +38,7 @@ interface GameState {
   mouseFarmsLevel: number
   keyboardFactoriesLevel: number
   monitorDisplaysLevel: number
+  officeSpaceLevel: number
   serverRoomsLevel: number
   dataCentersLevel: number
   dataCitiesLevel: number
@@ -86,6 +88,7 @@ const initialState = {
   mouseFarms: 0,
   keyboardFactories: 0,
   monitorDisplays: 0,
+  officeSpace: 0,
   serverRooms: 0,
   dataCenters: 0,
   dataCities: 0,
@@ -100,6 +103,7 @@ const initialState = {
   mouseFarmsLevel: 1,
   keyboardFactoriesLevel: 1,
   monitorDisplaysLevel: 1,
+  officeSpaceLevel: 1,
   serverRoomsLevel: 1,
   dataCentersLevel: 1,
   dataCitiesLevel: 1,
@@ -123,17 +127,18 @@ const PRODUCTION_RATES = {
   mouseFarms: { points: 0.1 },
   keyboardFactories: { points: 0.2 },
   monitorDisplays: { points: 0.2 },
-  serverRooms: { points: 1 },
-  dataCenters: { points: 5 },
-  dataCities: { points: 25 },
-  dataCountries: { points: 100 },
-  dataContinents: { points: 500 },
-  dataWorlds: { points: 2500 },
-  dataMoons: { points: 10000 },
-  dataSolarSystems: { points: 50000 },
-  dataGalaxies: { points: 250000 },
-  dataUniverses: { points: 1000000 },
-  dataGods: { points: 5000000 },
+  officeSpace: { points: 1 },
+  serverRooms: { points: 5 },
+  dataCenters: { points: 25 },
+  dataCities: { points: 100 },
+  dataCountries: { points: 500 },
+  dataContinents: { points: 2500 },
+  dataWorlds: { points: 10000 },
+  dataMoons: { points: 50000 },
+  dataSolarSystems: { points: 250000 },
+  dataGalaxies: { points: 1000000 },
+  dataUniverses: { points: 5000000 },
+  dataGods: { points: 25000000 },
 }
 
 // Building costs
@@ -141,17 +146,18 @@ const BUILDING_COSTS = {
   mouseFarms: 10,
   keyboardFactories: 50,
   monitorDisplays: 100,
-  serverRooms: 500,
-  dataCenters: 1000,
-  dataCities: 5000,
-  dataCountries: 25000,
-  dataContinents: 100000,
-  dataWorlds: 500000,
-  dataMoons: 2000000,
-  dataSolarSystems: 10000000,
-  dataGalaxies: 50000000,
-  dataUniverses: 200000000,
-  dataGods: 1000000000,
+  officeSpace: 500,
+  serverRooms: 1000,
+  dataCenters: 5000,
+  dataCities: 25000,
+  dataCountries: 100000,
+  dataContinents: 500000,
+  dataWorlds: 2000000,
+  dataMoons: 10000000,
+  dataSolarSystems: 50000000,
+  dataGalaxies: 200000000,
+  dataUniverses: 1000000000,
+  dataGods: 5000000000,
 }
 
 // Building level requirements
@@ -159,17 +165,18 @@ const BUILDING_LEVEL_REQUIREMENTS = {
   mouseFarms: 1,
   keyboardFactories: 1,
   monitorDisplays: 1,
+  officeSpace: 1,
   serverRooms: 1,
-  dataCenters: 1,
-  dataCities: 5,
-  dataCountries: 10,
-  dataContinents: 20,
-  dataWorlds: 30,
-  dataMoons: 40,
-  dataSolarSystems: 50,
-  dataGalaxies: 60,
-  dataUniverses: 70,
-  dataGods: 80,
+  dataCenters: 5,
+  dataCities: 10,
+  dataCountries: 20,
+  dataContinents: 30,
+  dataWorlds: 40,
+  dataMoons: 50,
+  dataSolarSystems: 60,
+  dataGalaxies: 70,
+  dataUniverses: 80,
+  dataGods: 90,
 }
 
 // Special multiplier purchases
@@ -375,81 +382,88 @@ export const BUILDING_INFO: Record<string, Omit<BuildingInfo, 'id'>> = {
     description: 'High-resolution displays that generate points. A balanced production facility.',
     production: { points: 0.2 }
   },
-  serverRooms: {
+  officeSpace: {
     cost: 500,
     levelRequirement: 1,
-    title: 'Server Room',
-    description: 'A powerful facility that generates significant amounts of points. Requires proper cooling.',
+    title: 'Office Space',
+    description: 'A productive workspace filled with computers. Generates a significant amount of points.',
     production: { points: 1 }
   },
-  dataCenters: {
+  serverRooms: {
     cost: 1000,
     levelRequirement: 1,
-    title: 'Data Center',
-    description: 'The ultimate production facility. Generates massive amounts of points but requires significant investment.',
+    title: 'Server Room',
+    description: 'A powerful facility that generates substantial amounts of points. Requires proper cooling.',
     production: { points: 5 }
   },
-  dataCities: {
+  dataCenters: {
     cost: 5000,
     levelRequirement: 5,
-    title: 'Data City',
-    description: 'A massive network of data centers spanning an entire city. Requires level 5 to unlock.',
+    title: 'Data Center',
+    description: 'The ultimate production facility. Generates massive amounts of points but requires significant investment.',
     production: { points: 25 }
   },
-  dataCountries: {
+  dataCities: {
     cost: 25000,
     levelRequirement: 10,
-    title: 'Data Country',
-    description: 'A country-wide network of data cities. Requires level 10 to unlock.',
+    title: 'Data City',
+    description: 'A massive network of data centers spanning an entire city. Requires level 10 to unlock.',
     production: { points: 100 }
   },
-  dataContinents: {
+  dataCountries: {
     cost: 100000,
     levelRequirement: 20,
-    title: 'Data Continent',
-    description: 'A continent-spanning network of data countries. Requires level 20 to unlock.',
+    title: 'Data Country',
+    description: 'A country-wide network of data cities. Requires level 20 to unlock.',
     production: { points: 500 }
   },
-  dataWorlds: {
+  dataContinents: {
     cost: 500000,
     levelRequirement: 30,
-    title: 'Data World',
-    description: 'A world-wide network of data continents. Requires level 30 to unlock.',
+    title: 'Data Continent',
+    description: 'A continent-spanning network of data countries. Requires level 30 to unlock.',
     production: { points: 2500 }
   },
-  dataMoons: {
+  dataWorlds: {
     cost: 2000000,
     levelRequirement: 40,
-    title: 'Data Moon',
-    description: 'A moon-sized data processing facility. Requires level 40 to unlock.',
+    title: 'Data World',
+    description: 'A world-wide network of data continents. Requires level 40 to unlock.',
     production: { points: 10000 }
   },
-  dataSolarSystems: {
+  dataMoons: {
     cost: 10000000,
     levelRequirement: 50,
-    title: 'Data Solar System',
-    description: 'A solar system-wide network of data moons. Requires level 50 to unlock.',
+    title: 'Data Moon',
+    description: 'A moon-sized data processing facility. Requires level 50 to unlock.',
     production: { points: 50000 }
   },
-  dataGalaxies: {
+  dataSolarSystems: {
     cost: 50000000,
     levelRequirement: 60,
-    title: 'Data Galaxy',
-    description: 'A galaxy-spanning network of data solar systems. Requires level 60 to unlock.',
+    title: 'Data Solar System',
+    description: 'A solar system-wide network of data moons. Requires level 60 to unlock.',
     production: { points: 250000 }
   },
-  dataUniverses: {
+  dataGalaxies: {
     cost: 200000000,
     levelRequirement: 70,
-    title: 'Data Universe',
-    description: 'A universe-wide network of data galaxies. Requires level 70 to unlock.',
+    title: 'Data Galaxy',
+    description: 'A galaxy-spanning network of data solar systems. Requires level 70 to unlock.',
     production: { points: 1000000 }
   },
-  dataGods: {
+  dataUniverses: {
     cost: 1000000000,
     levelRequirement: 80,
-    title: 'Data God',
-    description: 'The ultimate data processing entity. Requires level 80 to unlock.',
+    title: 'Data Universe',
+    description: 'A universe-wide network of data galaxies. Requires level 80 to unlock.',
     production: { points: 5000000 }
+  },
+  dataGods: {
+    cost: 5000000000,
+    levelRequirement: 90,
+    title: 'Data God',
+    description: 'The ultimate data processing entity. Requires level 90 to unlock.',
+    production: { points: 25000000 }
   }
 } 

@@ -10,7 +10,16 @@ export function ResourceDisplay() {
   // Calculate progress to next level
   const currentLevelPPS = Math.pow(10, playerLevel - 1)
   const nextLevelPPS = Math.pow(10, playerLevel)
-  const progress = ((pointsPerSecond - currentLevelPPS) / (nextLevelPPS - currentLevelPPS)) * 100
+  
+  // Handle progress calculation properly
+  let progress = 0;
+  if (playerLevel === 1) {
+    // For level 1, show progress from 0 to 10 PPS
+    progress = Math.min(Math.max((pointsPerSecond / nextLevelPPS) * 100, 0), 100);
+  } else {
+    // For levels > 1, show progress from currentLevelPPS to nextLevelPPS
+    progress = Math.min(Math.max(((pointsPerSecond - currentLevelPPS) / (nextLevelPPS - currentLevelPPS)) * 100, 0), 100);
+  }
 
   return (
     <Box
@@ -49,6 +58,9 @@ export function ResourceDisplay() {
             borderRadius="full"
             bg="gray.700"
           />
+          <Text fontSize="xs" color="gray.500" mt={1} textAlign="center">
+            {pointsPerSecond.toFixed(1)}/{nextLevelPPS} PPS
+          </Text>
         </Box>
       </VStack>
     </Box>

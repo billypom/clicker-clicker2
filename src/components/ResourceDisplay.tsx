@@ -1,4 +1,4 @@
-import { Box, HStack, Text, Progress, VStack } from '@chakra-ui/react'
+import { Box, HStack, Text, Progress, Flex, Divider, Tooltip } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
 
 export function ResourceDisplay() {
@@ -29,40 +29,63 @@ export function ResourceDisplay() {
       right={0}
       zIndex={100}
       bg="gray.900"
-      py={4}
+      py={2}
       borderBottom="1px"
       borderColor="gray.700"
       shadow="lg"
     >
-      <VStack spacing={2}>
-        <HStack spacing={8} justify="center">
-          <Box textAlign="center">
-            <Text fontSize="xl" fontWeight="bold">Points</Text>
-            <Text fontSize="2xl">{Math.floor(points)}</Text>
-            <Text fontSize="sm" color="green.400">+{pointsPerSecond}/s</Text>
-            <Text fontSize="sm" color="green.400">Click Power: {actualClickPower}</Text>
-            {activeMultipliers.length > 0 && (
-              <Text fontSize="sm" color="yellow.400">{totalMultiplier}x Active</Text>
-            )}
-          </Box>
-        </HStack>
-        <Box w="full" maxW="600px" px={4}>
-          <HStack justify="space-between" mb={1}>
-            <Text fontSize="sm" color="gray.400">Level {playerLevel}</Text>
-            <Text fontSize="sm" color="gray.400">Level {playerLevel + 1}</Text>
-          </HStack>
-          <Progress 
-            value={progress} 
-            colorScheme="green"
-            size="sm"
-            borderRadius="full"
-            bg="gray.700"
-          />
-          <Text fontSize="xs" color="gray.500" mt={1} textAlign="center">
-            {pointsPerSecond.toFixed(1)}/{nextLevelPPS} PPS
-          </Text>
+      <Flex 
+        justify="center" 
+        align="center" 
+        wrap="nowrap"
+        maxW="1200px"
+        mx="auto"
+        px={4}
+        gap={4}
+      >
+        {/* Points */}
+        <Box textAlign="center" minW="120px">
+          <Text fontSize="sm" fontWeight="bold">Points</Text>
+          <Text fontSize="md" fontWeight="bold">{Math.floor(points)}</Text>
+          <Text fontSize="xs" color="green.400">+{pointsPerSecond.toFixed(1)}/s</Text>
         </Box>
-      </VStack>
+
+        <Divider orientation="vertical" h="40px" />
+
+        {/* Click Power */}
+        <Box textAlign="center" minW="120px">
+          <Text fontSize="sm" fontWeight="bold">Click Power</Text>
+          <Text fontSize="md">{actualClickPower}</Text>
+          {activeMultipliers.length > 0 && (
+            <Text fontSize="xs" color="yellow.400">{totalMultiplier}x Active</Text>
+          )}
+        </Box>
+
+        <Divider orientation="vertical" h="40px" />
+
+        {/* Level */}
+        <Box textAlign="center" minW="80px">
+          <Text fontSize="sm" fontWeight="bold">Level</Text>
+          <Text fontSize="md">{playerLevel}</Text>
+        </Box>
+
+        {/* Progress to next level */}
+        <Tooltip label={`${pointsPerSecond.toFixed(1)}/${nextLevelPPS} PPS`}>
+          <Box flex="1" maxW="300px">
+            <Flex justify="space-between" mb={1}>
+              <Text fontSize="xs" color="gray.400">Level {playerLevel}</Text>
+              <Text fontSize="xs" color="gray.400">Level {playerLevel + 1}</Text>
+            </Flex>
+            <Progress 
+              value={progress} 
+              colorScheme="green"
+              size="sm"
+              borderRadius="full"
+              bg="gray.700"
+            />
+          </Box>
+        </Tooltip>
+      </Flex>
     </Box>
   )
 } 

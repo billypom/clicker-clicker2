@@ -137,7 +137,7 @@ function App() {
         cursor="pointer"
       >
         <ResourceDisplay />
-        <Box pt="180px">
+        <Box pt="100px">
           <Container maxW="container.xl">
             <VStack spacing={8}>
               <Box textAlign="center" w="full">

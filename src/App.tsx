@@ -15,10 +15,18 @@ import {
   Button,
   Flex,
   Image,
-  Center
+  Center,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Checkbox,
+  useDisclosure
 } from '@chakra-ui/react'
 import theme from './theme'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import logoImg from './assets/logo.png'
 
 type BuildingId = 'mouseFarms' | 'keyboardFactories' | 'monitorDisplays' | 'officeSpace' | 'serverRooms' | 'dataCenters' | 
@@ -110,6 +118,9 @@ function App() {
     click
   } = useGameStore()
 
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
+  const [hasStarted, setHasStarted] = useState(false)
+  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
   const availableBuildings = getAvailableBuildings()
 
   // Set up game tick interval
@@ -118,10 +129,33 @@ function App() {
     return () => clearInterval(interval)
   }, [tick])
 
+  // Handle keyboard events
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Only allow clicks after terms are accepted and modal is closed
+      if (hasStarted) {
+        click()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [click, hasStarted])
+
   // Handle clicks anywhere in the game
   const handleClick = (e: React.MouseEvent) => {
-    // All clicks count now!
-    click()
+    // Only allow clicks after terms are accepted and modal is closed
+    if (hasStarted) {
+      click()
+    }
+  }
+
+  // Handle starting the game
+  const handleStartGame = () => {
+    if (agreedToTerms) {
+      setHasStarted(true)
+      onClose()
+    }
   }
 
   return (
@@ -131,22 +165,12 @@ function App() {
         bg="gray.900" 
         color="white"
         onClick={handleClick}
-        cursor="pointer"
+        cursor={hasStarted ? "pointer" : "default"}
       >
         <ResourceDisplay />
         <Box pt="100px">
           <Container maxW="container.xl">
             <VStack spacing={8}>
-              <Box textAlign="center" w="full" position="relative">
-                <Flex direction="column" align="center" mb={4}>
-                  {points === 0 && (
-                    <Text fontSize="xl" color="cyan.400" fontWeight="bold" mt={2}>
-                      Click anywhere to start
-                    </Text>
-                  )}
-                </Flex>
-              </Box>
-              
               <VStack spacing={8} w="full">
                 {/* Buildings Grid */}
                 <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
@@ -207,6 +231,70 @@ function App() {
             </VStack>
           </Container>
         </Box>
+
+        {/* Terms and Conditions Modal */}
+        <Modal 
+          isOpen={!hasStarted && points === 0} 
+          onClose={() => {}} 
+          closeOnOverlayClick={false} 
+          isCentered 
+          size="2xl"
+        >
+          <ModalOverlay />
+          <ModalContent bg="gray.800" color="white" maxW="800px">
+            <ModalHeader borderBottom="1px" borderColor="gray.700" pb={4}>
+              Welcome to ClickerCorp™
+            </ModalHeader>
+            <ModalBody py={6}>
+              <VStack spacing={6} align="stretch">
+                <Box>
+                  <Text fontSize="lg" fontWeight="bold" mb={2}>
+                    Employment Agreement
+                  </Text>
+                  <Text fontSize="md" color="gray.300" lineHeight="1.6">
+                    Welcome aboard! You have been selected by ClickerCorp™ to spearhead our mission-critical clicking initiatives. 
+                    As our new Synergy Enhancement Specialist, you will leverage cutting-edge click-through paradigms to maximize 
+                    stakeholder value in the rapidly evolving digital interaction space. Your KPIs include optimizing click-to-value 
+                    ratios while maintaining best-in-class finger ergonomics. Together, we'll disrupt the clicking industry!
+                  </Text>
+                </Box>
+
+                <Box>
+                  <Text fontSize="lg" fontWeight="bold" mb={2}>
+                    Controls & Operations
+                  </Text>
+                  <Text fontSize="md" color="gray.300" lineHeight="1.6">
+                    Click anywhere or press any key to generate points and advance your career in the digital clicking space.
+                  </Text>
+                </Box>
+
+                <Box>
+                  <Text fontSize="sm" color="gray.400" fontStyle="italic">
+                    (Please note: This position is unpaid and offers exposure as compensation)
+                  </Text>
+                </Box>
+
+                <Checkbox 
+                  colorScheme="cyan"
+                  isChecked={agreedToTerms}
+                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                >
+                  I have read and agree to the terms of employment at ClickerCorp™
+                </Checkbox>
+              </VStack>
+            </ModalBody>
+            <ModalFooter borderTop="1px" borderColor="gray.700" pt={4}>
+              <Button
+                colorScheme="cyan"
+                isDisabled={!agreedToTerms}
+                onClick={handleStartGame}
+                w="full"
+              >
+                Begin Employment
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
     </ChakraProvider>
   )

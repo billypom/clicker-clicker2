@@ -13,10 +13,13 @@ import {
   VStack,
   SimpleGrid,
   Button,
-  Flex
+  Flex,
+  Image,
+  Center
 } from '@chakra-ui/react'
 import theme from './theme'
 import { useEffect } from 'react'
+import logoImg from './assets/logo.png'
 
 type BuildingId = 'mouseFarms' | 'keyboardFactories' | 'monitorDisplays' | 'officeSpace' | 'serverRooms' | 'dataCenters' | 
                   'dataCities' | 'dataCountries' | 'dataContinents' | 'dataWorlds' | 'dataMoons' | 
@@ -117,13 +120,7 @@ function App() {
 
   // Handle clicks anywhere in the game
   const handleClick = (e: React.MouseEvent) => {
-    // Don't count clicks on buttons or interactive elements
-    if (e.target instanceof HTMLElement && 
-        (e.target.tagName === 'BUTTON' || 
-         e.target.closest('button') || 
-         e.target.closest('[role="button"]'))) {
-      return
-    }
+    // All clicks count now!
     click()
   }
 
@@ -140,18 +137,29 @@ function App() {
         <Box pt="100px">
           <Container maxW="container.xl">
             <VStack spacing={8}>
-              <Box textAlign="center" w="full">
-                <Flex justify="space-between" align="center" mb={4}>
-                  <Heading as="h1" size="2xl">Clicker Clicker 2</Heading>
-                  <ResetButton />
+              <Box textAlign="center" w="full" position="relative">
+                <Flex direction="column" align="center" mb={4}>
+                  <Box maxW="400px" mb={2}>
+                    <Image src={logoImg} alt="Clicker Clicker 2" />
+                  </Box>
+                  <Text fontSize="xl" color="cyan.400" fontWeight="bold" mt={2}>
+                    Click anywhere to start (and then scroll down)
+                  </Text>
                 </Flex>
-                <Text fontSize="xl" color="yellow.400" mb={4}>Level {playerLevel}</Text>
+                
+                {/* Reset button positioned in the top right */}
+                <Box position="absolute" top={0} right={0}>
+                  <ResetButton />
+                </Box>
               </Box>
               
               <VStack spacing={8} w="full">
                 {/* Shop Section */}
                 <Box bg="gray.800" p={6} borderRadius="lg" w="full">
-                  <Heading as="h2" size="xl" mb={6} color="blue.400">Shop</Heading>
+                  <Flex justify="space-between" align="center" mb={6}>
+                    <Heading as="h2" size="xl" color="blue.400">Shop</Heading>
+                    <Text fontSize="lg" color="yellow.400">Level {playerLevel}</Text>
+                  </Flex>
                   <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
                     {availableBuildings.map((building) => (
                       <BuildingButton
@@ -194,9 +202,10 @@ function App() {
                         </Text>
                         <Button 
                           onClick={() => useGameStore.getState().buyUpgrade('clickPower')}
-                          isDisabled={points < 20}
+                          opacity={points < 20 ? 0.4 : 1}
+                          _hover={{ bg: 'gray.500', opacity: points < 20 ? 0.4 : 1 }}
                           bg="gray.600"
-                          _hover={{ bg: 'gray.500' }}
+                          cursor={points < 20 ? 'not-allowed' : 'pointer'}
                         >
                           Upgrade (20 points)
                         </Button>

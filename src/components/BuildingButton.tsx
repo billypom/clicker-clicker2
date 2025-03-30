@@ -74,7 +74,7 @@ export function BuildingButton({
   const { points, playerLevel, upgradeBuilding } = useGameStore()
   const canAfford = points >= cost
   const meetsLevelRequirement = playerLevel >= levelRequirement
-  const isDisabled = !canAfford || !meetsLevelRequirement
+  const isDisabledStyle = !canAfford || !meetsLevelRequirement
 
   // Calculate upgrade cost
   const calculateUpgradeCost = (currentLevel: number): number => {
@@ -124,7 +124,7 @@ export function BuildingButton({
             <Text fontWeight="bold" fontSize="md">{title}</Text>
           </Box>
           
-          {/* Overlay for owned and level */}
+          {/* Overlay for owned count */}
           <Box 
             position="absolute" 
             bottom="0" 
@@ -134,10 +134,7 @@ export function BuildingButton({
             borderTopLeftRadius="md"
             borderBottomRightRadius="md"
           >
-            <HStack spacing={3}>
-              <Text fontSize="sm">Owned: {owned}</Text>
-              <Text fontSize="sm">Level: {level}</Text>
-            </HStack>
+            <Text fontSize="sm">Owned: {owned}</Text>
           </Box>
         </Box>
         
@@ -150,7 +147,9 @@ export function BuildingButton({
         <HStack spacing={2}>
           <Button 
             onClick={onClick}
-            isDisabled={points < cost || playerLevel < levelRequirement}
+            opacity={isDisabledStyle ? 0.4 : 1}
+            _hover={{ bg: 'blue.600', opacity: isDisabledStyle ? 0.4 : 1 }}
+            cursor={isDisabledStyle ? 'not-allowed' : 'pointer'}
             colorScheme="blue"
             size="sm"
             flexGrow={1}
@@ -160,7 +159,9 @@ export function BuildingButton({
           <Tooltip label={owned === 0 ? "You need to own this building first" : ""}>
             <Button 
               onClick={() => upgradeBuilding(buildingType as any)}
-              isDisabled={!canUpgrade}
+              opacity={!canUpgrade ? 0.4 : 1}
+              _hover={{ bg: 'green.600', opacity: !canUpgrade ? 0.4 : 1 }}
+              cursor={!canUpgrade ? 'not-allowed' : 'pointer'}
               colorScheme="green"
               size="sm"
               flexGrow={1}

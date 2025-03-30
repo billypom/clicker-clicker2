@@ -5,9 +5,46 @@ import {
   Text, 
   Badge,
   Tooltip,
-  HStack
+  HStack,
+  Image
 } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
+
+// Import all building images
+import mouseImg from '../assets/mouse.png'
+import keyboardImg from '../assets/keyboard.png'
+import monitorImg from '../assets/monitor.png'
+import officeImg from '../assets/office.png'
+import serverRoomImg from '../assets/server room.png'
+import dataCenterImg from '../assets/data center.png'
+import cityImg from '../assets/city.png'
+import countryImg from '../assets/country.png'
+import continentImg from '../assets/continent.png'
+import worldImg from '../assets/world.png'
+import moonImg from '../assets/moon.png'
+import solarSystemImg from '../assets/solar system.png'
+import galaxyImg from '../assets/galaxy.png'
+import universeImg from '../assets/universe.png'
+import godImg from '../assets/god.png'
+
+// Create an image mapping object
+const buildingImages = {
+  mouseFarms: mouseImg,
+  keyboardFactories: keyboardImg,
+  monitorDisplays: monitorImg,
+  officeSpace: officeImg,
+  serverRooms: serverRoomImg,
+  dataCenters: dataCenterImg,
+  dataCities: cityImg,
+  dataCountries: countryImg,
+  dataContinents: continentImg,
+  dataWorlds: worldImg,
+  dataMoons: moonImg,
+  dataSolarSystems: solarSystemImg,
+  dataGalaxies: galaxyImg,
+  dataUniverses: universeImg,
+  dataGods: godImg
+}
 
 interface BuildingButtonProps {
   title: string
@@ -62,6 +99,25 @@ export function BuildingButton({
             <Text>Level: {level}</Text>
           </HStack>
         </Box>
+        
+        {/* Add the building image */}
+        <Box 
+          display="flex" 
+          justifyContent="center" 
+          bg="gray.800" 
+          borderRadius="md" 
+          p={2}
+          height="120px"
+          overflow="hidden"
+        >
+          <Image 
+            src={buildingImages[buildingType as keyof typeof buildingImages]} 
+            alt={title}
+            objectFit="contain"
+            maxHeight="100%"
+          />
+        </Box>
+        
         <Text fontSize="sm" color="gray.400">{description}</Text>
         <Box>
           <Text fontSize="sm">Production:</Text>

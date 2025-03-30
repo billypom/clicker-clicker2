@@ -28,7 +28,7 @@ export function NextBuildingPreview() {
 
   if (!nextBuilding) return null
 
-  const [id, info] = nextBuilding as [string, BuildingInfo]
+  const [id, info] = nextBuilding
 
   return (
     <Tooltip label={`Requires level ${info.levelRequirement}`}>
@@ -53,12 +53,7 @@ export function NextBuildingPreview() {
           </Box>
           <Box>
             <Text fontSize="sm">Production:</Text>
-            {info.production.points && (
-              <Text fontSize="sm">Points: {info.production.points}/s</Text>
-            )}
-            {info.production.techParts && (
-              <Text fontSize="sm">Tech Parts: {info.production.techParts}/s</Text>
-            )}
+            <Text fontSize="sm">Points: {info.production.points}/s</Text>
           </Box>
         </VStack>
       </Box>

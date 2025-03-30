@@ -2,16 +2,16 @@ import { Box, Button, VStack, HStack, Text, SimpleGrid } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
 
 const MULTIPLIER_PURCHASES = [
-  { duration: 30, multiplier: 2, cost: 10, name: '30s 2x Click Power' },
-  { duration: 60, multiplier: 2, cost: 15, name: '1m 2x Click Power' },
-  { duration: 30, multiplier: 3, cost: 25, name: '30s 3x Click Power' },
-  { duration: 60, multiplier: 3, cost: 35, name: '1m 3x Click Power' },
-  { duration: 30, multiplier: 5, cost: 50, name: '30s 5x Click Power' },
-  { duration: 60, multiplier: 5, cost: 75, name: '1m 5x Click Power' },
+  { duration: 30, multiplier: 2, cost: 100, name: '30s 2x Click Power' },
+  { duration: 60, multiplier: 2, cost: 150, name: '1m 2x Click Power' },
+  { duration: 30, multiplier: 3, cost: 250, name: '30s 3x Click Power' },
+  { duration: 60, multiplier: 3, cost: 350, name: '1m 3x Click Power' },
+  { duration: 30, multiplier: 5, cost: 500, name: '30s 5x Click Power' },
+  { duration: 60, multiplier: 5, cost: 750, name: '1m 5x Click Power' },
 ]
 
 export function MultiplierShop() {
-  const { techParts, buyMultiplier } = useGameStore()
+  const { points, buyMultiplier } = useGameStore()
 
   return (
     <Box bg="gray.800" p={6} borderRadius="lg">
@@ -27,7 +27,7 @@ export function MultiplierShop() {
             <Button
               key={`${purchase.duration}-${purchase.multiplier}`}
               onClick={() => buyMultiplier(purchase.duration, purchase.multiplier)}
-              isDisabled={techParts < purchase.cost}
+              isDisabled={points < purchase.cost}
               bg="gray.700"
               _hover={{ bg: 'gray.600' }}
               height="auto"
@@ -38,7 +38,7 @@ export function MultiplierShop() {
                 <Text fontSize="xl" fontWeight="bold">{purchase.multiplier}x Click Power</Text>
                 <Text fontSize="md" color="gray.300">{purchase.duration}s duration</Text>
                 <Box borderTop="1px" borderColor="gray.600" pt={2}>
-                  <Text fontSize="md" color="yellow.400">Cost: {purchase.cost} tech parts</Text>
+                  <Text fontSize="md" color="yellow.400">Cost: {purchase.cost} points</Text>
                 </Box>
               </VStack>
             </Button>

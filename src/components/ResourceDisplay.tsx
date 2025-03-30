@@ -2,7 +2,7 @@ import { Box, HStack, Text, Progress, VStack } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
 
 export function ResourceDisplay() {
-  const { points, techParts, pointsPerSecond, techPartsPerSecond, clickPower, getTotalMultiplier, activeMultipliers, playerLevel } = useGameStore()
+  const { points, pointsPerSecond, clickPower, getTotalMultiplier, activeMultipliers, playerLevel } = useGameStore()
 
   const totalMultiplier = getTotalMultiplier()
   const actualClickPower = clickPower * totalMultiplier
@@ -35,11 +35,6 @@ export function ResourceDisplay() {
             {activeMultipliers.length > 0 && (
               <Text fontSize="sm" color="yellow.400">{totalMultiplier}x Active</Text>
             )}
-          </Box>
-          <Box textAlign="center">
-            <Text fontSize="xl" fontWeight="bold">Tech Parts</Text>
-            <Text fontSize="2xl">{Math.floor(techParts)}</Text>
-            <Text fontSize="sm" color="blue.400">+{techPartsPerSecond}/s</Text>
           </Box>
         </HStack>
         <Box w="full" maxW="600px" px={4}>

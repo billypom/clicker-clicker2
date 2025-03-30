@@ -99,7 +99,7 @@ export function ResourceDisplay() {
           <Box textAlign="center" minW="120px">
             <Text fontSize="sm" fontWeight="bold" color="brand.300" variant="pixel">Click Power</Text>
             <Flex justify="center" align="center" gap={1}>
-              <Text fontSize="md" color="text.primary">{formatNumber(clickPower)}</Text>
+              <Text fontSize="md" color="text.primary">{clickPower}</Text>
               <Tooltip label={`Upgrade to level ${clickPower + 1} (${formatNumber(clickPowerUpgradeCost)} points)`}>
                 <Button
                   size="xs"

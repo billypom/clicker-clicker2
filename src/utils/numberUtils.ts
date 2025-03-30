@@ -14,7 +14,10 @@ export function formatNumber(value: number, decimals: number = 3, useCommas: boo
   const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
   
   // If the number is 1000 or less, format without decimals
-  if (value <= 1000) {
+  if (value < 10) {
+    return value.toFixed(2);
+  }
+  else if (value <= 1000) {
     return useCommas ? Math.floor(value).toLocaleString() : Math.floor(value).toString();
   }
   

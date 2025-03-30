@@ -147,7 +147,7 @@ export function BuildingButton({
             borderBottomRightRadius="md"
             boxShadow="0 1px 3px rgba(0,0,0,0.5)"
           >
-            <Text fontWeight="bold" fontSize="sm" color="brand.200" variant="pixel">{title}</Text>
+            <Text fontWeight="bold" fontSize="xs" color="brand.200" variant="pixel">{title}</Text>
           </Box>
           
           {/* Overlay for owned count */}
@@ -198,6 +198,13 @@ export function BuildingButton({
             color="text.dark"
             size="sm"
             flexGrow={1}
+            px={1}
+            height="auto"
+            minH="2rem"
+            whiteSpace="normal"
+            textAlign="center"
+            lineHeight="1.2"
+            fontSize="xs"
           >
             Buy ({formatNumber(cost)} points)
           </Button>
@@ -211,6 +218,13 @@ export function BuildingButton({
               size="sm"
               flexGrow={1}
               variant="outline"
+              px={1}
+              height="auto"
+              minH="2rem"
+              whiteSpace="normal"
+              textAlign="center"
+              lineHeight="1.2"
+              fontSize="xs"
             >
               Upgrade ({formatNumber(upgradeCost)} points)
             </Button>

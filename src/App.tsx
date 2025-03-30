@@ -94,8 +94,8 @@ function App() {
         cursor={hasStarted ? "pointer" : "default"}
       >
         <ResourceDisplay />
-        <Box pt="100px">
-          <Container maxW="container.xl">
+        <Box pt="100px flex flex-col w-full">
+          <Container maxW="container.xl m-auto">
             <VStack spacing={8}>
               <VStack spacing={8} w="full">
                 {/* Game Title */}
@@ -103,7 +103,7 @@ function App() {
                   <Heading as="h1" size="lg" color="brand.300">Clicker Clicker 2</Heading>
                 </Box>
                 {/* Buildings Grid */}
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={4}>
+                <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} gap={4}>
                   {availableBuildings.map((building) => (
                     <BuildingButton
                       key={building.id}

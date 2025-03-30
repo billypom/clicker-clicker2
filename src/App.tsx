@@ -41,13 +41,15 @@ function App() {
     getAvailableBuildings,
     tick,
     clickPower,
-    click
+    click,
+    getClickPowerUpgradeCost
   } = useGameStore()
 
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [hasStarted, setHasStarted] = useState(false)
   const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
   const availableBuildings = getAvailableBuildings()
+  const clickPowerUpgradeCost = getClickPowerUpgradeCost()
 
   // Set up game tick interval
   useEffect(() => {
@@ -140,12 +142,12 @@ function App() {
                         </Text>
                         <Button 
                           onClick={() => useGameStore.getState().buyUpgrade('clickPower')}
-                          opacity={points < 20 ? 0.4 : 1}
-                          _hover={{ bg: 'gray.500', opacity: points < 20 ? 0.4 : 1 }}
+                          opacity={points < clickPowerUpgradeCost ? 0.4 : 1}
+                          _hover={{ bg: 'gray.500', opacity: points < clickPowerUpgradeCost ? 0.4 : 1 }}
                           bg="gray.600"
-                          cursor={points < 20 ? 'not-allowed' : 'pointer'}
+                          cursor={points < clickPowerUpgradeCost ? 'not-allowed' : 'pointer'}
                         >
-                          Upgrade (20 points)
+                          Upgrade ({clickPowerUpgradeCost} points)
                         </Button>
                       </VStack>
                     </Box>

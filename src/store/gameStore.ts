@@ -55,6 +55,7 @@ interface GameState {
   // Upgrades
   autoClickers: number
   clickPower: number
+  clickPowerUpgrades: number
   
   // Production rates
   pointsPerSecond: number
@@ -69,6 +70,7 @@ interface GameState {
   resetGame: () => void
   tick: () => void
   upgradeBuilding: (buildingType: BuildingType) => void
+  getClickPowerUpgradeCost: () => number
 
   // New getter for available buildings
   getAvailableBuildings: () => BuildingInfo[]
@@ -210,6 +212,7 @@ const initialState = {
   dataGodsLevel: 1,
   autoClickers: 0,
   clickPower: 1,
+  clickPowerUpgrades: 0,
   pointsPerSecond: 0,
   playerLevel: 1,
 }
@@ -277,6 +280,11 @@ const calculateUpgradeCost = (buildingType: BuildingType, currentLevel: number):
   return Math.floor(baseCost * Math.pow(1.5, currentLevel - 1))
 }
 
+// Helper function to calculate click power upgrade cost
+const calculateClickPowerUpgradeCost = (upgrades: number): number => {
+  return Math.floor(20 * Math.pow(1.5, upgrades));
+}
+
 type BuildingType = keyof typeof BUILDING_COSTS
 type UpgradeType = 'autoClickers' | 'clickPower'
 
@@ -326,12 +334,22 @@ export const useGameStore = create<GameState>()(
         const state = get()
         
         // Handle upgrade purchase
-        if (upgradeType === 'clickPower' && state.points >= 20) {
-          set((state) => ({
-            points: state.points - 20,
-            clickPower: state.clickPower + 1
-          }))
+        if (upgradeType === 'clickPower') {
+          const cost = calculateClickPowerUpgradeCost(state.clickPowerUpgrades)
+          
+          if (state.points >= cost) {
+            set((state) => ({
+              points: state.points - cost,
+              clickPower: state.clickPower + 1,
+              clickPowerUpgrades: state.clickPowerUpgrades + 1
+            }))
+          }
         }
+      },
+
+      getClickPowerUpgradeCost: () => {
+        const { clickPowerUpgrades } = get()
+        return calculateClickPowerUpgradeCost(clickPowerUpgrades)
       },
 
       upgradeBuilding: (buildingType: BuildingType) => {

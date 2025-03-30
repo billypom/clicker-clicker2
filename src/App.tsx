@@ -2,6 +2,7 @@ import { ResourceDisplay } from './components/ResourceDisplay'
 import { BuildingButton } from './components/BuildingButton'
 import { MultiplierShop } from './components/MultiplierShop'
 import { NextBuildingPreview } from './components/NextBuildingPreview'
+import { ResetButton } from './components/ResetButton'
 import { useGameStore } from './store/gameStore'
 import { 
   ChakraProvider, 
@@ -11,7 +12,8 @@ import {
   Text, 
   VStack,
   SimpleGrid,
-  Button
+  Button,
+  Flex
 } from '@chakra-ui/react'
 import theme from './theme'
 import { useEffect } from 'react'
@@ -138,8 +140,11 @@ function App() {
         <Box pt="180px">
           <Container maxW="container.xl">
             <VStack spacing={8}>
-              <Box textAlign="center">
-                <Heading as="h1" size="2xl" mb={4}>Clicker Clicker 2</Heading>
+              <Box textAlign="center" w="full">
+                <Flex justify="space-between" align="center" mb={4}>
+                  <Heading as="h1" size="2xl">Clicker Clicker 2</Heading>
+                  <ResetButton />
+                </Flex>
                 <Text fontSize="xl" color="yellow.400" mb={4}>Level {playerLevel}</Text>
               </Box>
               

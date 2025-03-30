@@ -6,7 +6,9 @@ import {
   Badge,
   Tooltip,
   HStack,
-  Image
+  Image,
+  Flex,
+  AspectRatio
 } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
 
@@ -92,30 +94,51 @@ export function BuildingButton({
       borderColor="gray.600"
     >
       <VStack align="stretch" spacing={2}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Text fontWeight="bold">{title}</Text>
-          <HStack>
-            <Text>Owned: {owned}</Text>
-            <Text>Level: {level}</Text>
-          </HStack>
-        </Box>
-        
-        {/* Add the building image */}
-        <Box 
-          display="flex" 
-          justifyContent="center" 
-          bg="gray.800" 
-          borderRadius="md" 
-          p={2}
-          height="120px"
-          overflow="hidden"
-        >
-          <Image 
-            src={buildingImages[buildingType as keyof typeof buildingImages]} 
-            alt={title}
-            objectFit="contain"
-            maxHeight="100%"
-          />
+        {/* Image with overlapping title and stats */}
+        <Box position="relative">
+          <AspectRatio ratio={1} w="100%">
+            <Box 
+              borderRadius="md" 
+              overflow="hidden"
+            >
+              <Image 
+                src={buildingImages[buildingType as keyof typeof buildingImages]} 
+                alt={title}
+                objectFit="cover"
+                w="100%"
+                h="100%"
+              />
+            </Box>
+          </AspectRatio>
+          
+          {/* Overlay for title */}
+          <Box 
+            position="absolute" 
+            top="0" 
+            left="0" 
+            p={2} 
+            bg="blackAlpha.700"
+            borderTopLeftRadius="md"
+            borderBottomRightRadius="md"
+          >
+            <Text fontWeight="bold" fontSize="md">{title}</Text>
+          </Box>
+          
+          {/* Overlay for owned and level */}
+          <Box 
+            position="absolute" 
+            bottom="0" 
+            right="0" 
+            p={2} 
+            bg="blackAlpha.700"
+            borderTopLeftRadius="md"
+            borderBottomRightRadius="md"
+          >
+            <HStack spacing={3}>
+              <Text fontSize="sm">Owned: {owned}</Text>
+              <Text fontSize="sm">Level: {level}</Text>
+            </HStack>
+          </Box>
         </Box>
         
         <Text fontSize="sm" color="gray.400">{description}</Text>

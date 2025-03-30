@@ -1,10 +1,8 @@
 import { ResourceDisplay } from './components/ResourceDisplay'
 import { BuildingButton } from './components/BuildingButton'
 import { NextBuildingPreview } from './components/NextBuildingPreview'
-import { ResetButton } from './components/ResetButton'
 import { useGameStore } from './store/gameStore'
-import { playClickSound, initAudio } from './utils/soundUtils'
-import { formatNumber } from './utils/numberUtils'
+import { initAudio } from './utils/soundUtils'
 import { 
   ChakraProvider, 
   Box, 
@@ -14,9 +12,6 @@ import {
   VStack,
   SimpleGrid,
   Button,
-  Flex,
-  Image,
-  Center,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -28,7 +23,6 @@ import {
 } from '@chakra-ui/react'
 import theme from './theme'
 import { useEffect, useState } from 'react'
-import logoImg from './assets/logo.png'
 
 type BuildingId = 'mouseFarms' | 'keyboardFactories' | 'monitorDisplays' | 'officeSpace' | 'serverRooms' | 'dataCenters' | 
                   'dataCities' | 'dataCountries' | 'dataContinents' | 'dataWorlds' | 'dataMoons' | 
@@ -39,7 +33,6 @@ type BuildingLevelKey = `${BuildingId}Level`
 function App() {
   const { 
     points,
-    playerLevel,
     getAvailableBuildings,
     tick,
     click,
@@ -47,7 +40,7 @@ function App() {
 
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [hasStarted, setHasStarted] = useState(false)
-  const { isOpen, onClose } = useDisclosure({ defaultIsOpen: true })
+  const { onClose } = useDisclosure({ defaultIsOpen: true })
   const availableBuildings = getAvailableBuildings()
 
   // Set up game tick interval
@@ -66,7 +59,7 @@ function App() {
 
   // This is now handled globally, but we'll keep a simpler version
   // for UI feedback only (cursor change, etc)
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     // Don't call click() here as it's now handled globally
     // Just for visual feedback
     if (hasStarted) {

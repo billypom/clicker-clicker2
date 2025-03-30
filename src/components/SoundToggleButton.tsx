@@ -1,6 +1,6 @@
-import { IconButton, Tooltip, useBoolean } from '@chakra-ui/react'
+import { IconButton, Tooltip } from '@chakra-ui/react'
 import { toggleSound, isSoundEnabled, initAudio } from '../utils/soundUtils'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export function SoundToggleButton() {
   // Initialize the state with the current sound enabled state

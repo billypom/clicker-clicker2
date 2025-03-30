@@ -9,7 +9,6 @@ const SOUND_FILES = {
 // AudioManager singleton for handling all game audio
 class AudioManager {
   private soundEnabled: boolean = true;
-  private audioContext: AudioContext | null = null;
   private sounds: Map<string, HTMLAudioElement> = new Map();
   private lastClickIndex: number = -1;
   private initialized: boolean = false;
@@ -36,12 +35,6 @@ class AudioManager {
     }
     
     try {
-      // Create AudioContext if possible (will only work after user interaction)
-      if (window.AudioContext || (window as any).webkitAudioContext) {
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-        this.audioContext = new AudioContextClass();
-      }
-      
       // Play a silent sound to unlock audio on iOS/Safari
       const silentSound = new Audio();
       silentSound.play().catch(e => console.log('Silent sound failed to play:', e));
@@ -189,4 +182,4 @@ export const playPurchaseSound = () => audioManager.playPurchaseSound();
 export const playLevelUpSound = () => audioManager.playLevelUpSound();
 export const playUpgradeSound = () => audioManager.playUpgradeSound();
 export const toggleSound = (state?: boolean) => audioManager.toggleSound(state);
-export const isSoundEnabled = () => audioManager.isSoundEnabled(); 
+export const isSoundEnabled = () => audioManager.isSoundEnabled();

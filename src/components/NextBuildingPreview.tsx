@@ -9,17 +9,6 @@ import { useGameStore } from '../store/gameStore'
 import { BUILDING_INFO } from '../store/gameStore'
 import { formatNumber } from '../utils/numberUtils'
 
-interface BuildingInfo {
-  cost: number
-  levelRequirement: number
-  title: string
-  description: string
-  production: {
-    points?: number
-    techParts?: number
-  }
-}
-
 export function NextBuildingPreview() {
   const { playerLevel } = useGameStore()
   
@@ -29,7 +18,7 @@ export function NextBuildingPreview() {
 
   if (!nextBuilding) return null
 
-  const [id, info] = nextBuilding
+  const [, info] = nextBuilding
 
   return (
     <Tooltip label={`Requires level ${info.levelRequirement}`}>

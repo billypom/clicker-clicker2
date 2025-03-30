@@ -1,4 +1,4 @@
-import { Box, Button, VStack, HStack, Text, SimpleGrid } from '@chakra-ui/react'
+import { Box, Button, VStack, Text, SimpleGrid } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
 
 const MULTIPLIER_PURCHASES = [
@@ -11,7 +11,7 @@ const MULTIPLIER_PURCHASES = [
 ]
 
 export function MultiplierShop() {
-  const { points, buyMultiplier } = useGameStore()
+  const { points } = useGameStore()
 
   return (
     <Box bg="gray.800" p={6} borderRadius="lg">
@@ -26,7 +26,8 @@ export function MultiplierShop() {
           {MULTIPLIER_PURCHASES.map((purchase) => (
             <Button
               key={`${purchase.duration}-${purchase.multiplier}`}
-              onClick={() => buyMultiplier(purchase.duration, purchase.multiplier)}
+              // Multiplier shop functionality is not yet implemented in the game state
+              // onClick={() => buyMultiplier(purchase.duration, purchase.multiplier)}
               isDisabled={points < purchase.cost}
               bg="gray.700"
               _hover={{ bg: 'gray.600' }}

@@ -1,4 +1,4 @@
-import { Box, HStack, Text, Progress, Flex, Divider, Tooltip, Image, Button, Icon } from '@chakra-ui/react'
+import { Box, Text, Progress, Flex, Divider, Tooltip, Image, Button } from '@chakra-ui/react'
 import { useGameStore } from '../store/gameStore'
 import logoImg from '../assets/logo.png'
 import { ResetButton } from './ResetButton'

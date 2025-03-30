@@ -28,7 +28,7 @@ function AppWithGlobalHandlers() {
   }, [gameStarted]);
 
   useEffect(() => {
-    const handleGlobalClick = (e: MouseEvent) => {
+    const handleGlobalClick = () => {
       // Only trigger if game has started
       const gameState = useGameStore.getState();
       if ((gameStarted || gameState.points > 0) && gameState.playerLevel >= 1) {
@@ -37,7 +37,7 @@ function AppWithGlobalHandlers() {
       }
     };
 
-    const handleGlobalKeyPress = (e: KeyboardEvent) => {
+    const handleGlobalKeyPress = () => {
       // Only trigger if game has started
       const gameState = useGameStore.getState();
       if ((gameStarted || gameState.points > 0) && gameState.playerLevel >= 1) {

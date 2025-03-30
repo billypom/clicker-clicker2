@@ -3,7 +3,6 @@ import {
   Button, 
   VStack,
   Text, 
-  Badge,
   Tooltip,
   HStack,
   Image,

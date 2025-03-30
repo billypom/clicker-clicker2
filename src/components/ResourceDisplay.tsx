@@ -4,10 +4,7 @@ import logoImg from '../assets/logo.png'
 import { ResetButton } from './ResetButton'
 
 export function ResourceDisplay() {
-  const { points, pointsPerSecond, clickPower, getTotalMultiplier, activeMultipliers, playerLevel } = useGameStore()
-
-  const totalMultiplier = getTotalMultiplier()
-  const actualClickPower = clickPower * totalMultiplier
+  const { points, pointsPerSecond, clickPower, playerLevel } = useGameStore()
 
   // Calculate progress to next level
   const currentLevelPPS = Math.pow(10, playerLevel - 1)
@@ -91,10 +88,7 @@ export function ResourceDisplay() {
           {/* Click Power */}
           <Box textAlign="center" minW="120px">
             <Text fontSize="sm" fontWeight="bold">Click Power</Text>
-            <Text fontSize="md">{actualClickPower}</Text>
-            {activeMultipliers.length > 0 && (
-              <Text fontSize="xs" color="yellow.400">{totalMultiplier}x Active</Text>
-            )}
+            <Text fontSize="md">{clickPower}</Text>
           </Box>
 
           <Divider orientation="vertical" h="40px" />

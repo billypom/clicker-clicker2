@@ -1,8 +1,9 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-interface BuildingInfo {
-  id: string
+// Building information interface
+export interface BuildingInfo {
+  id?: string
   cost: number
   levelRequirement: number
   title: string
@@ -58,12 +59,6 @@ interface GameState {
   // Production rates
   pointsPerSecond: number
 
-  // Special purchases
-  activeMultipliers: Array<{
-    multiplier: number
-    endTime: number
-  }>
-
   // Player level
   playerLevel: number
   
@@ -73,14 +68,112 @@ interface GameState {
   buyUpgrade: (upgradeType: UpgradeType) => void
   resetGame: () => void
   tick: () => void
-  buyMultiplier: (duration: number, multiplier: number) => void
   upgradeBuilding: (buildingType: BuildingType) => void
 
   // New getter for available buildings
   getAvailableBuildings: () => BuildingInfo[]
-  
-  // Add getter for total multiplier
-  getTotalMultiplier: () => number
+}
+
+// Building information with costs and requirements
+export const BUILDING_INFO: Record<string, Omit<BuildingInfo, 'id'>> = {
+  mouseFarms: {
+    title: 'Mouse Farm',
+    description: 'A basic facility that produces computer mice. Each mouse farm generates points automatically.',
+    production: { points: 0.1 },
+    cost: 10,
+    levelRequirement: 1
+  },
+  keyboardFactories: {
+    title: 'Keyboard Factory',
+    description: 'Manufactures mechanical keyboards and generates tech parts. Essential for advanced upgrades.',
+    production: { points: 0.2 },
+    cost: 50,
+    levelRequirement: 1
+  },
+  monitorDisplays: {
+    title: 'Monitor Display',
+    description: 'High-resolution displays that generate both points and tech parts. A balanced production facility.',
+    production: { points: 0.2 },
+    cost: 100,
+    levelRequirement: 1
+  },
+  serverRooms: {
+    title: 'Server Room',
+    description: 'A powerful facility that generates significant amounts of both resources. Requires proper cooling.',
+    production: { points: 5 },
+    cost: 1000,
+    levelRequirement: 1
+  },
+  dataCenters: {
+    title: 'Data Center',
+    description: 'The ultimate production facility. Generates massive amounts of resources but requires significant investment.',
+    production: { points: 25 },
+    cost: 5000,
+    levelRequirement: 5
+  },
+  dataCities: {
+    title: 'Data City',
+    description: 'A massive network of data centers spanning an entire city. Requires level 10 to unlock.',
+    production: { points: 100 },
+    cost: 25000,
+    levelRequirement: 10
+  },
+  dataCountries: {
+    title: 'Data Country',
+    description: 'A country-wide network of data cities. Requires level 20 to unlock.',
+    production: { points: 500 },
+    cost: 100000,
+    levelRequirement: 20
+  },
+  dataContinents: {
+    title: 'Data Continent',
+    description: 'A continent-spanning network of data countries. Requires level 30 to unlock.',
+    production: { points: 2500 },
+    cost: 500000,
+    levelRequirement: 30
+  },
+  dataWorlds: {
+    title: 'Data World',
+    description: 'A world-wide network of data continents. Requires level 40 to unlock.',
+    production: { points: 10000 },
+    cost: 2000000,
+    levelRequirement: 40
+  },
+  dataMoons: {
+    title: 'Data Moon',
+    description: 'A moon-sized data processing facility. Requires level 50 to unlock.',
+    production: { points: 50000 },
+    cost: 10000000,
+    levelRequirement: 50
+  },
+  dataSolarSystems: {
+    title: 'Data Solar System',
+    description: 'A solar system-wide network of data moons. Requires level 60 to unlock.',
+    production: { points: 250000 },
+    cost: 50000000,
+    levelRequirement: 60
+  },
+  dataGalaxies: {
+    title: 'Data Galaxy',
+    description: 'A galaxy-spanning network of data solar systems. Requires level 70 to unlock.',
+    production: { points: 1000000 },
+    cost: 200000000,
+    levelRequirement: 70
+  },
+  dataUniverses: {
+    title: 'Data Universe',
+    description: 'A universe-wide network of data galaxies. Requires level 80 to unlock.',
+    production: { points: 5000000 },
+    cost: 1000000000,
+    levelRequirement: 80
+  },
+  dataGods: {
+    title: 'Data God',
+    description: 'The ultimate data processing entity. Requires level 90 to unlock.',
+    production: { points: 25000000 },
+    cost: 5000000000,
+    levelRequirement: 90
+  }
 }
 
 const initialState = {
@@ -118,7 +211,6 @@ const initialState = {
   autoClickers: 0,
   clickPower: 1,
   pointsPerSecond: 0,
-  activeMultipliers: [],
   playerLevel: 1,
 }
 
@@ -179,32 +271,10 @@ const BUILDING_LEVEL_REQUIREMENTS = {
   dataGods: 90,
 }
 
-// Special multiplier purchases
-const MULTIPLIER_PURCHASES = [
-  { duration: 30, multiplier: 2, cost: 100, name: '30s 2x Click Power' },
-  { duration: 60, multiplier: 2, cost: 150, name: '1m 2x Click Power' },
-  { duration: 30, multiplier: 3, cost: 250, name: '30s 3x Click Power' },
-  { duration: 60, multiplier: 3, cost: 350, name: '1m 3x Click Power' },
-  { duration: 30, multiplier: 5, cost: 500, name: '30s 5x Click Power' },
-  { duration: 60, multiplier: 5, cost: 750, name: '1m 5x Click Power' },
-]
-
 // Calculate upgrade cost based on current level
 const calculateUpgradeCost = (buildingType: BuildingType, currentLevel: number): number => {
   const baseCost = BUILDING_COSTS[buildingType]
   return Math.floor(baseCost * Math.pow(1.5, currentLevel - 1))
-}
-
-// Building costs and level requirements
-export interface BuildingInfo {
-  cost: number
-  levelRequirement: number
-  title: string
-  description: string
-  production: {
-    points: number
-  }
-  id?: string
 }
 
 type BuildingType = keyof typeof BUILDING_COSTS
@@ -227,9 +297,8 @@ export const useGameStore = create<GameState>()(
       ...initialState,
 
       click: () => {
-        const { clickPower, autoClickers, getTotalMultiplier } = get()
-        const totalMultiplier = getTotalMultiplier()
-        const pointsPerClick = clickPower * (1 + autoClickers * 0.1) * totalMultiplier
+        const { clickPower, autoClickers } = get()
+        const pointsPerClick = clickPower * (1 + autoClickers * 0.1)
         set((state) => ({
           points: state.points + pointsPerClick,
         }))
@@ -253,217 +322,71 @@ export const useGameStore = create<GameState>()(
         }
       },
 
+      buyUpgrade: (upgradeType: UpgradeType) => {
+        const state = get()
+        
+        // Handle upgrade purchase
+        if (upgradeType === 'clickPower' && state.points >= 20) {
+          set((state) => ({
+            points: state.points - 20,
+            clickPower: state.clickPower + 1
+          }))
+        }
+      },
+
       upgradeBuilding: (buildingType: BuildingType) => {
         const state = get()
         const currentLevel = state[`${buildingType}Level` as keyof GameState] as number
-        const upgradeCost = calculateUpgradeCost(buildingType, currentLevel)
+        const cost = calculateUpgradeCost(buildingType, currentLevel)
         
-        if (state.points >= upgradeCost) {
+        if (state.points >= cost && state[buildingType] > 0) {
           set((state) => {
+            const newLevel = (state[`${buildingType}Level` as keyof GameState] as number) + 1
             const rates = PRODUCTION_RATES[buildingType]
             const count = state[buildingType]
-            const newLevel = currentLevel + 1
+            
+            // Calculate the new points per second
+            const oldProduction = rates.points * (newLevel - 1) * count
+            const newProduction = rates.points * newLevel * count
+            const productionDifference = newProduction - oldProduction
             
             return {
-              points: state.points - upgradeCost,
+              points: state.points - cost,
               [`${buildingType}Level`]: newLevel,
-              pointsPerSecond: state.pointsPerSecond + rates.points * count,
+              pointsPerSecond: state.pointsPerSecond + productionDifference,
             }
           })
         }
       },
-
-      buyUpgrade: (upgradeType: UpgradeType) => {
-        const state = get()
-        const upgradeCosts: Record<UpgradeType, number> = {
-          autoClickers: 50,
-          clickPower: 20,
-        }
-
-        const cost = upgradeCosts[upgradeType]
-        if (state.points >= cost) {
-          set((state) => ({
-            points: state.points - cost,
-            [upgradeType]: state[upgradeType] + 1,
-          }))
-        }
-      },
-
-      buyMultiplier: (duration: number, multiplier: number) => {
-        const state = get()
-        const purchase = MULTIPLIER_PURCHASES.find(
-          p => p.duration === duration && p.multiplier === multiplier
-        )
-        
-        if (purchase && state.points >= purchase.cost) {
-          const now = Date.now()
-          set((state) => ({
-            points: state.points - purchase.cost,
-            activeMultipliers: [
-              ...state.activeMultipliers,
-              {
-                multiplier,
-                endTime: now + duration * 1000
-              }
-            ]
-          }))
-        }
-      },
-
-      tick: () => {
-        const state = get()
-        const now = Date.now()
-        
-        // Check for expired multipliers
-        const activeMultipliers = state.activeMultipliers.filter(m => m.endTime > now)
-        if (activeMultipliers.length !== state.activeMultipliers.length) {
-          set({ activeMultipliers })
-        }
-
-        // Update player level based on points per second
-        const newLevel = Math.floor(Math.log10(state.pointsPerSecond + 1)) + 1
-        if (newLevel !== state.playerLevel) {
-          set({ playerLevel: newLevel })
-        }
-
-        // Calculate resources gained in this tick (1/10th of a second)
-        const pointsGained = state.pointsPerSecond / 10
-
-        set({
-          points: state.points + pointsGained,
-        })
-      },
-
+      
       resetGame: () => {
         set(initialState)
       },
 
-      // Add new getter for available buildings
-      getAvailableBuildings: () => {
+      tick: () => {
         const state = get()
-        return getAvailableBuildings(state.playerLevel)
+        
+        // Add production from buildings
+        if (state.pointsPerSecond > 0) {
+          set((state) => ({
+            points: state.points + state.pointsPerSecond / 10, // 10 ticks per second
+          }))
+        }
+        
+        // Update player level based on points per second
+        const playerLevel = Math.max(1, Math.floor(Math.log10(state.pointsPerSecond) + 1))
+        if (playerLevel !== state.playerLevel) {
+          set({ playerLevel })
+        }
       },
 
-      // Add getter for total multiplier
-      getTotalMultiplier: () => {
-        const state = get()
-        const now = Date.now()
-        return state.activeMultipliers
-          .filter(m => m.endTime > now)
-          .reduce((total, m) => total + (m.multiplier - 1), 1) // Subtract 1 from each multiplier and add 1 at the end
+      getAvailableBuildings: () => {
+        const { playerLevel } = get()
+        return getAvailableBuildings(playerLevel)
       },
     }),
     {
-      name: 'game-storage',
+      name: 'clicker-game',
     }
   )
 ) 
-
-// Building costs and level requirements
-export const BUILDING_INFO: Record<string, Omit<BuildingInfo, 'id'>> = {
-  mouseFarms: {
-    cost: 10,
-    levelRequirement: 1,
-    title: 'Mouse Farm',
-    description: 'A basic facility that produces computer mice. Each mouse farm generates points automatically.',
-    production: { points: 0.1 }
-  },
-  keyboardFactories: {
-    cost: 50,
-    levelRequirement: 1,
-    title: 'Keyboard Factory',
-    description: 'Manufactures mechanical keyboards. Generates points automatically.',
-    production: { points: 0.2 }
-  },
-  monitorDisplays: {
-    cost: 100,
-    levelRequirement: 1,
-    title: 'Monitor Display',
-    description: 'High-resolution displays that generate points. A balanced production facility.',
-    production: { points: 0.2 }
-  },
-  officeSpace: {
-    cost: 500,
-    levelRequirement: 1,
-    title: 'Office Space',
-    description: 'A productive workspace filled with computers. Generates a significant amount of points.',
-    production: { points: 1 }
-  },
-  serverRooms: {
-    cost: 1000,
-    levelRequirement: 1,
-    title: 'Server Room',
-    description: 'A powerful facility that generates substantial amounts of points. Requires proper cooling.',
-    production: { points: 5 }
-  },
-  dataCenters: {
-    cost: 5000,
-    levelRequirement: 5,
-    title: 'Data Center',
-    description: 'The ultimate production facility. Generates massive amounts of points but requires significant investment.',
-    production: { points: 25 }
-  },
-  dataCities: {
-    cost: 25000,
-    levelRequirement: 10,
-    title: 'Data City',
-    description: 'A massive network of data centers spanning an entire city. Requires level 10 to unlock.',
-    production: { points: 100 }
-  },
-  dataCountries: {
-    cost: 100000,
-    levelRequirement: 20,
-    title: 'Data Country',
-    description: 'A country-wide network of data cities. Requires level 20 to unlock.',
-    production: { points: 500 }
-  },
-  dataContinents: {
-    cost: 500000,
-    levelRequirement: 30,
-    title: 'Data Continent',
-    description: 'A continent-spanning network of data countries. Requires level 30 to unlock.',
-    production: { points: 2500 }
-  },
-  dataWorlds: {
-    cost: 2000000,
-    levelRequirement: 40,
-    title: 'Data World',
-    description: 'A world-wide network of data continents. Requires level 40 to unlock.',
-    production: { points: 10000 }
-  },
-  dataMoons: {
-    cost: 10000000,
-    levelRequirement: 50,
-    title: 'Data Moon',
-    description: 'A moon-sized data processing facility. Requires level 50 to unlock.',
-    production: { points: 50000 }
-  },
-  dataSolarSystems: {
-    cost: 50000000,
-    levelRequirement: 60,
-    title: 'Data Solar System',
-    description: 'A solar system-wide network of data moons. Requires level 60 to unlock.',
-    production: { points: 250000 }
-  },
-  dataGalaxies: {
-    cost: 200000000,
-    levelRequirement: 70,
-    title: 'Data Galaxy',
-    description: 'A galaxy-spanning network of data solar systems. Requires level 70 to unlock.',
-    production: { points: 1000000 }
-  },
-  dataUniverses: {
-    cost: 1000000000,
-    levelRequirement: 80,
-    title: 'Data Universe',
-    description: 'A universe-wide network of data galaxies. Requires level 80 to unlock.',
-    production: { points: 5000000 }
-  },
-  dataGods: {
-    cost: 5000000000,
-    levelRequirement: 90,
-    title: 'Data God',
-    description: 'The ultimate data processing entity. Requires level 90 to unlock.',
-    production: { points: 25000000 }
-  }
-} 
